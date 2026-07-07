@@ -1,83 +1,96 @@
 import { useState, useEffect, useRef } from 'react';
 import { formatDate } from '../utils/helpers';
 
-export default function NoteEditor({ note, onUpdate }) {
+export default function NoteEditor({ note, onUpdate, isSaving }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const titleRef = useRef(null);
-  const isInitialMount = useRef(true);
+  const titleTimer = useRef(null);
+  const contentTimer = useRef(null);
 
-  // Sync local state when switching notes
   useEffect(() => {
     if (note) {
       setTitle(note.title || '');
       setContent(note.content || '');
     }
-    isInitialMount.current = true;
   }, [note?.id]);
 
-  // Debounced save
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    if (!note) return;
-    const timer = setTimeout(() => {
-      onUpdate(note.id, { title, content });
+  const handleTitleChange = (e) => {
+    const val = e.target.value;
+    setTitle(val);
+    if (titleTimer.current) clearTimeout(titleTimer.current);
+    titleTimer.current = setTimeout(() => {
+      onUpdate(note.id, { title: val });
     }, 400);
-    return () => clearTimeout(timer);
-  }, [title, content, note?.id, onUpdate]);
+  };
 
-  if (!note) {
-    return (
-      <div className="flex-1 flex items-center justify-center bg-gray-50 text-gray-400">
-        <div className="text-center">
-          <svg className="w-16 h-16 mx-auto mb-4 opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-            <polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" />
-          </svg>
-          <p className="text-sm">Select a note or create a new one</p>
-        </div>
-      </div>
-    );
-  }
+  const handleContentChange = (e) => {
+    const val = e.target.value;
+    setContent(val);
+    if (contentTimer.current) clearTimeout(contentTimer.current);
+    contentTimer.current = setTimeout(() => {
+      onUpdate(note.id, { content: val });
+    }, 400);
+  };
 
+  // Word and character counts
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
   const charCount = content.length;
 
+  if (!note) {
+    return null;
+  }
+
   return (
-    <main className="flex-1 flex flex-col h-full bg-white">
-      <div className="flex-1 flex flex-col max-w-3xl mx-auto w-full px-8 py-6">
-        <input
-          ref={titleRef}
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Note title..."
-          className="w-full text-2xl font-semibold text-gray-800 outline-none placeholder:text-gray-300 mb-2"
-          aria-label="Note title"
-        />
-
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Start writing..."
-          className="flex-1 w-full resize-none outline-none text-base leading-relaxed text-gray-700 placeholder:text-gray-300"
-          aria-label="Note content"
-        />
-
-        <div className="flex items-center justify-between pt-4 pb-2 text-xs text-gray-400 border-t border-gray-100 mt-4">
-          <div className="flex gap-4">
-            <span>{wordCount} {wordCount === 1 ? 'word' : 'words'}</span>
-            <span>{charCount} {charCount === 1 ? 'char' : 'chars'}</span>
+    <div className="flex-1 flex flex-col h-full">
+      {/* Editor header */}
+      <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 bg-white shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="text-xs text-gray-400">
+            Created {formatDate(note.createdAt)}
           </div>
-          <div className="flex gap-4">
-            <span>Created {formatDate(note.createdAt)}</span>
-            <span>Edited {formatDate(note.updatedAt)}</span>
-          </div>
+          {note.updatedAt !== note.createdAt && (
+            <>
+              <span className="text-gray-300">·</span>
+              <div className="text-xs text-gray-400">
+                Edited {formatDate(note.updatedAt)}
+              </div>
+            </>
+          )}
+        </div>
+        <div className="flex items-center gap-3 text-xs text-gray-400">
+          <span>{wordCount} words</span>
+          <span>{charCount} chars</span>
+          {isSaving && (
+            <span className="text-indigo-500 animate-pulse flex items-center gap-1">
+              <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" />
+              Saving
+            </span>
+          )}
         </div>
       </div>
-    </main>
+
+      {/* Editor body */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-3xl mx-auto px-6 py-8">
+          <input
+            ref={titleRef}
+            type="text"
+            value={title}
+            onChange={handleTitleChange}
+            placeholder="Untitled"
+            className="w-full text-3xl font-bold text-gray-800 placeholder-gray-300 border-none outline-none bg-transparent mb-6 focus:ring-0"
+            aria-label="Note title"
+          />
+          <textarea
+            value={content}
+            onChange={handleContentChange}
+            placeholder="Start writing..."
+            className="w-full min-h-[calc(100vh-280px)] text-base text-gray-700 placeholder-gray-300 border-none outline-none bg-transparent resize-none focus:ring-0 leading-relaxed"
+            aria-label="Note content"
+          />
+        </div>
+      </div>
+    </div>
   );
 }

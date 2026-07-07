@@ -6,6 +6,7 @@ export function useNotes() {
   const [notes, setNotes] = useLocalStorage('notes-app-notes', []);
   const [activeNoteId, setActiveNoteId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const saveTimer = useRef(null);
 
   const activeNote = notes.find((n) => n.id === activeNoteId) || null;
@@ -63,28 +64,71 @@ export function useNotes() {
   const updateNote = useCallback(
     (id, updates) => {
       if (saveTimer.current) clearTimeout(saveTimer.current);
+      setIsSaving(true);
       saveTimer.current = setTimeout(() => {
         setNotes((prev) =>
           prev.map((n) =>
             n.id === id ? { ...n, ...updates, updatedAt: Date.now() } : n
           )
         );
-      }, 300);
+        setIsSaving(false);
+      }, 400);
     },
     [setNotes]
   );
 
-  const updateNoteImmediate = useCallback(
-    (id, updates) => {
-      if (saveTimer.current) clearTimeout(saveTimer.current);
-      setNotes((prev) =>
-        prev.map((n) =>
-          n.id === id ? { ...n, ...updates, updatedAt: Date.now() } : n
-        )
-      );
-    },
-    [setNotes]
-  );
+  // Export all notes as JSON
+  const exportNotes = useCallback(() => {
+    const data = JSON.stringify(notes, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `notes-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [notes]);
+
+  // Import notes from JSON file
+  const importNotes = useCallback((file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (!Array.isArray(imported)) throw new Error('Invalid format');
+          // Validate each note has required fields
+          const valid = imported.every(
+            (n) => n.id && typeof n.title === 'string' && typeof n.content === 'string'
+          );
+          if (!valid) throw new Error('Invalid note structure');
+          setNotes((prev) => {
+            const existing = new Set(prev.map((n) => n.id));
+            const merged = [...prev];
+            let added = 0;
+            for (const note of imported) {
+              if (!existing.has(note.id)) {
+                merged.push(note);
+                added++;
+              }
+            }
+            return merged.sort((a, b) => b.updatedAt - a.updatedAt);
+          });
+          resolve(imported.length);
+        } catch (err) {
+          reject(err);
+        }
+      };
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsText(file);
+    });
+  }, [setNotes]);
+
+  // Clear all notes
+  const clearAllNotes = useCallback(() => {
+    setNotes([]);
+    setActiveNoteId(null);
+  }, [setNotes]);
 
   // Save any pending changes on unmount
   useEffect(() => {
@@ -99,12 +143,15 @@ export function useNotes() {
     activeNote,
     activeNoteId,
     searchQuery,
+    isSaving,
     setActiveNoteId,
     setSearchQuery,
     createNote,
     deleteNote,
     togglePin,
     updateNote,
-    updateNoteImmediate,
+    exportNotes,
+    importNotes,
+    clearAllNotes,
   };
 }
