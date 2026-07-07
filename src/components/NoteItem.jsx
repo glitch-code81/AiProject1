@@ -4,7 +4,7 @@ export default function NoteItem({ note, isActive, onClick, onDelete, onPin }) {
   return (
     <div
       onClick={() => onClick(note.id)}
-      className={`group relative px-4 py-3 border-b border-gray-100 cursor-pointer transition-colors
+      className={`group relative px-4 py-3 border-b border-gray-100 cursor-pointer transition-colors note-item-enter
         ${isActive ? 'bg-indigo-50 border-l-2 border-l-indigo-500' : 'hover:bg-gray-50 border-l-2 border-l-transparent'}`}
     >
       <div className="flex items-start justify-between gap-2">
