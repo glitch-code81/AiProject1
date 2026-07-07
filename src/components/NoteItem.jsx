@@ -1,6 +1,18 @@
 import { getNotePreview, formatDate } from '../utils/helpers';
 
-export default function NoteItem({ note, isActive, onClick, onDelete, onPin }) {
+function highlightText(text, query) {
+  if (!query || !text) return text;
+  const parts = text.split(new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'));
+  return parts.map((part, i) =>
+    part.toLowerCase() === query.toLowerCase()
+      ? <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 rounded-sm px-0.5">{part}</mark>
+      : part
+  );
+}
+
+export default function NoteItem({ note, isActive, onClick, onDelete, onPin, searchQuery }) {
+  const preview = getNotePreview(note);
+
   return (
     <div
       onClick={() => onClick(note.id)}
@@ -16,7 +28,7 @@ export default function NoteItem({ note, isActive, onClick, onDelete, onPin }) {
               </svg>
             )}
             <h3 className="text-sm font-medium text-gray-800 truncate leading-tight">
-              {getNotePreview(note)}
+              {searchQuery ? highlightText(preview, searchQuery) : preview}
             </h3>
           </div>
           <p className="text-xs text-gray-400 mt-0.5">{formatDate(note.updatedAt)}</p>
