@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-notes-bg: #f8f9fa;
   --color-notes-sidebar: #ffffff;
@@ -27,8 +29,43 @@ body {
   min-height: 100vh;
 }
 
+/* Dark mode */
+.dark body,
+.dark {
+  --color-notes-bg: #1a1a2e;
+  --color-notes-text: #e0e0e0;
+  --color-notes-muted: #a0a0a0;
+  --color-notes-border: #2a2a3e;
+  --color-notes-hover: #252540;
+  --color-notes-sidebar: #16213e;
+}
+
+.dark .bg-white { background-color: #16213e; }
+.dark .bg-gray-50 { background-color: #1a1a2e; }
+.dark .bg-gray-100 { background-color: #1e1e36; }
+.dark .text-gray-800 { color: #e8e8f0; }
+.dark .text-gray-700 { color: #d0d0e0; }
+.dark .text-gray-500 { color: #9090a8; }
+.dark .text-gray-400 { color: #707088; }
+.dark .text-gray-300 { color: #505068; }
+.dark .border-gray-200 { border-color: #2a2a3e; }
+.dark .border-gray-100 { border-color: #252540; }
+.dark .hover\:bg-gray-50:hover { background-color: #252540; }
+.dark .hover\:bg-gray-100:hover { background-color: #2a2a4a; }
+.dark .hover\:bg-gray-200:hover { background-color: #303050; }
+.dark .bg-indigo-50 { background-color: #1e1a3e; }
+.dark .placeholder\:text-gray-300::placeholder { color: #505068; }
+.dark .placeholder\:text-gray-400::placeholder { color: #404058; }
+
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #c4c4c4; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #a0a0a0; }
+
+.dark ::-webkit-scrollbar-thumb { background: #404058; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #505070; }
+
+/* Transitions */
+.slide-enter { opacity: 0; transform: translateY(10px); }
+.slide-enter-active { opacity: 1; transform: translateY(0); transition: all 200ms ease-out; }

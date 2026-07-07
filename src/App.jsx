@@ -7,9 +7,9 @@ import { useNotes } from './hooks/useNotes';
 
 function ConfirmDialog({ message, onConfirm, onCancel }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-      <div className="bg-white rounded-xl shadow-xl p-6 mx-4 max-w-sm w-full">
-        <p className="text-gray-800 mb-6">{message}</p>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-4">
+      <div className="bg-white rounded-xl shadow-xl p-6 max-w-sm w-full">
+        <p className="text-gray-800 mb-6 text-sm">{message}</p>
         <div className="flex justify-end gap-3">
           <button
             onClick={onCancel}
@@ -46,28 +46,44 @@ export default function App() {
 
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [toast, setToast] = useState(null);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    try { return localStorage.getItem('notes-app-dark') === 'true'; }
+    catch { return false; }
+  });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const showToast = useCallback((message, type = 'info') => {
     setToast({ message, type, id: Date.now() });
   }, []);
 
+  // Apply dark mode class
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+    try { localStorage.setItem('notes-app-dark', darkMode); }
+    catch { /* ignore */ }
+  }, [darkMode]);
+
   // Keyboard shortcuts
   useEffect(() => {
     const handler = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-      if (e.key === 'n' || (e.key === 'N' && !e.shiftKey)) {
+      if (e.key === 'n' && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
         e.preventDefault();
         const note = createNote();
+        setSidebarOpen(false);
         showToast('Note created');
+      }
+      if (e.key === 'Escape' && sidebarOpen) {
+        setSidebarOpen(false);
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [createNote, showToast]);
+  }, [createNote, showToast, sidebarOpen]);
 
   const handleCreateNote = useCallback(() => {
     createNote();
+    setSidebarOpen(false);
     showToast('Note created', 'success');
   }, [createNote, showToast]);
 
@@ -94,11 +110,9 @@ export default function App() {
 
   const toggleDarkMode = useCallback(() => {
     setDarkMode((prev) => !prev);
-    document.documentElement.classList.toggle('dark');
   }, []);
 
   const hasNotes = allNotes.length > 0;
-  const showEmpty = !hasNotes && !activeNote;
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-50">
@@ -112,13 +126,32 @@ export default function App() {
         onCreateNote={handleCreateNote}
         onDeleteNote={handleDeleteRequest}
         onPinNote={handlePinToggle}
+        isOpen={sidebarOpen}
+        onToggle={() => setSidebarOpen((prev) => !prev)}
       />
 
-      {showEmpty ? (
-        <EmptyState onCreate={handleCreateNote} />
-      ) : (
-        <NoteEditor note={activeNote} onUpdate={updateNote} />
-      )}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Mobile header */}
+        <div className="lg:hidden flex items-center gap-3 px-4 py-2.5 border-b border-gray-200 bg-white">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="p-1.5 -ml-1 rounded-lg hover:bg-gray-100 text-gray-600 cursor-pointer"
+            aria-label="Open sidebar"
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <h1 className="text-base font-semibold text-gray-800">Notes</h1>
+          <span className="text-xs text-gray-400 ml-auto">{allNotes.length}</span>
+        </div>
+
+        {!hasNotes && !activeNote ? (
+          <EmptyState onCreate={handleCreateNote} />
+        ) : (
+          <NoteEditor note={activeNote} onUpdate={updateNote} />
+        )}
+      </div>
 
       {/* Dark mode toggle */}
       <button
@@ -129,7 +162,7 @@ export default function App() {
       >
         {darkMode ? (
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="20.78" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
           </svg>
         ) : (
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -138,15 +171,10 @@ export default function App() {
         )}
       </button>
 
-      {/* Keyboard shortcut hint */}
-      <div className="fixed bottom-6 left-16 z-40 text-xs text-gray-400 bg-white/80 px-3 py-2 rounded-md shadow-sm">
-        Press <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-xs font-mono">N</kbd> for new note
-      </div>
-
       {/* Delete confirmation dialog */}
       {deleteConfirmId && (
         <ConfirmDialog
-          message="Are you sure you want to delete this note? This action cannot be undone."
+          message="Are you sure you want to delete this note? This cannot be undone."
           onConfirm={handleDeleteConfirm}
           onCancel={() => setDeleteConfirmId(null)}
         />
