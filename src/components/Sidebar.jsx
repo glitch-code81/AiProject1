@@ -4,7 +4,7 @@ import NoteItem from './NoteItem';
 export default function Sidebar({
   notes, activeNoteId, searchQuery, noteCount,
   onSelectNote, onSearchChange, onCreateNote, onDeleteNote, onPinNote,
-  onExport, onImport, isOpen, onToggle,
+  onExport, onImport, isOpen, onToggle, sortNewest, onSortToggle,
 }) {
   return (
     <>
@@ -30,7 +30,21 @@ export default function Sidebar({
               </button>
               <h1 className="text-lg font-semibold text-gray-800">Notes</h1>
             </div>
-            <span className="text-xs text-gray-400">{noteCount}</span>
+            <div className="flex items-center gap-1">
+              <button onClick={onSortToggle}
+                className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-indigo-600 transition-colors cursor-pointer"
+                aria-label="Toggle sort order" title={sortNewest ? 'Sort: newest first' : 'Sort: oldest first'}>
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                  strokeLinecap="round" strokeLinejoin="round">
+                  {sortNewest ? (
+                    <><path d="M12 5v14M8 9l4-4 4 4"/></>
+                  ) : (
+                    <><path d="M12 5v14M8 15l4 4 4-4"/></>
+                  )}
+                </svg>
+              </button>
+              <span className="text-xs text-gray-400">{noteCount}</span>
+            </div>
           </div>
           <SearchBar value={searchQuery} onChange={onSearchChange} />
         </div>
@@ -85,6 +99,12 @@ export default function Sidebar({
               />
             ))
           )}
+        </div>
+
+        <div className="p-3 border-t border-gray-100 text-center">
+          <span className="text-[10px] text-gray-300 tracking-wider uppercase">
+            N + New · Esc · Ctrl+F Search
+          </span>
         </div>
       </aside>
     </>

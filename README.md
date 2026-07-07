@@ -2,57 +2,66 @@
 
 A modern, responsive note-taking application built with React, Vite, and Tailwind CSS. Features a clean sidebar-based interface with local storage persistence, search, pinning, and dark mode.
 
+![Build](https://img.shields.io/badge/build-passing-brightgreen) ![React](https://img.shields.io/badge/React-19-61DAFB) ![Vite](https://img.shields.io/badge/Vite-6-646CFF)
+
+---
+
 ## Features
 
-- **Create, Edit, Delete** — Full CRUD operations with auto-save
-- **Search** — Real-time filtering with highlighted matches (Ctrl+F)
-- **Pin / Unpin** — Pin important notes to the top
-- **Dark Mode** — Toggle with a floating button, persists across sessions
-- **Responsive** — Collapsible sidebar with hamburger menu on mobile
-- **Auto-save** — Debounced saving with visual indicator
-- **Import / Export** — Backup and restore notes as JSON files
-- **Word & Character Count** — Shown in the editor header
-- **Toast Notifications** — Animated alerts for create, delete, pin actions
-- **Keyboard Shortcuts** — `N` for new note, `Esc` to close sidebar
-- **Delete Confirmation** — Prevents accidental deletion
-- **Timestamps** — Creation and last-edited time for every note
+- **Create, edit, delete notes** — Full CRUD with confirmation dialogs
+- **Pin/Unpin notes** — Pinned notes always appear at the top
+- **Search notes** — Real-time filtering with highlighted matches
+- **Auto-save** — Automatically saves as you type (with saving indicator)
+- **Word & character count** — Live stats in the editor header
+- **Dark mode** — Toggle with a button, preference persisted in localStorage
+- **Responsive layout** — Collapsible sidebar with hamburger menu on mobile
+- **Import/Export** — Save/load notes as JSON files
+- **Sort toggle** — Switch between newest-first and oldest-first ordering
+- **Keyboard shortcuts** — `N` for new note, `Esc` to close sidebar, `Ctrl+F` to search
+- **Animated UI** — Toast notifications, slide-in list items, floating empty state
+- **Data persistence** — All notes stored in browser localStorage
+
+---
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
 | Framework | React 19 |
-| Build Tool | Vite 6 |
-| Styling | Tailwind CSS 4 |
-| Language | JavaScript (JSX) |
-| Storage | Browser Local Storage |
-| Font | Inter (via Google Fonts) |
+| Build tool | Vite 6 |
+| Styling | Tailwind CSS v4 |
+| Storage | Web localStorage |
+| Icons | Inline SVGs |
+| Font | Inter (Google Fonts) |
+
+---
 
 ## Project Structure
 
 ```
 notes-app/
-├── index.html                 # Entry HTML with Inter font
-├── vite.config.js             # Vite + React + Tailwind config
+├── index.html                    # HTML shell with Inter font
 ├── package.json
+├── vite.config.js                # Vite config: React + Tailwind plugins
 ├── src/
-│   ├── main.jsx               # React entry point
-│   ├── App.jsx                # Root component, state orchestration
-│   ├── index.css              # Tailwind imports, dark mode, animations
+│   ├── main.jsx                  # React entry point
+│   ├── App.jsx                   # Main orchestrator (state, layout, toasts, dialogs)
+│   ├── index.css                 # Tailwind imports, theme variables, dark mode, animations
 │   ├── components/
-│   │   ├── Sidebar.jsx        # Note list, search, create button
-│   │   ├── NoteItem.jsx       # Individual note row with actions
-│   │   ├── NoteEditor.jsx     # Title/content editor with stats
-│   │   ├── SearchBar.jsx      # Search input with clear button
-│   │   ├── EmptyState.jsx     # Shown when no notes exist
-│   │   └── Toast.jsx          # Animated notification component
+│   │   ├── Sidebar.jsx           # Note list, search, create, import/export, sort, shortcuts footer
+│   │   ├── NoteEditor.jsx        # Title + content editor with auto-save and word count
+│   │   ├── NoteItem.jsx          # Single note card with pin/delete and search highlighting
+│   │   ├── SearchBar.jsx         # Search input with clear button and Ctrl+F focus
+│   │   ├── EmptyState.jsx        # Empty state illustration with create prompt
+│   │   └── Toast.jsx             # Animated notification toast
 │   ├── hooks/
-│   │   ├── useLocalStorage.js # Generic localStorage hook
-│   │   └── useNotes.js        # All note CRUD logic & state
+│   │   ├── useNotes.js           # Core business logic: CRUD, search, sort, import/export
+│   │   └── useLocalStorage.js    # localStorage persistence hook
 │   └── utils/
-│       └── helpers.js         # Date formatting, ID generation
-└── dist/                      # Build output (gitignored)
+│       └── helpers.js            # generateId, formatDate, getNotePreview
 ```
+
+---
 
 ## Architecture
 
@@ -62,97 +71,153 @@ notes-app/
 App
 ├── Sidebar
 │   ├── SearchBar
-│   └── NoteItem[] (sorted & filtered)
-├── NoteEditor (conditional)
-├── EmptyState (conditional)
-├── Toast (conditional)
-└── ConfirmDialog (conditional)
+│   └── NoteItem[] (mapped)
+├── NoteEditor / EmptyState
+└── Toast
 ```
 
 ### Data Flow
 
-1. **`useNotes`** hook manages all note state via `useLocalStorage`
-2. Notes are persisted to `localStorage` under the key `notes-app-notes`
-3. The hook provides sorted (pinned first, then by updatedAt) and filtered (by search query) note lists
-4. `App.jsx` orchestrates state and passes callbacks down to components
-5. `NoteEditor` debounces updates (400ms) to avoid excessive re-renders
-6. Dark mode preference is stored in `localStorage` as `notes-app-dark`
+1. **`useNotes()` hook** manages all state — notes array, active note, search query, sort order
+2. **`useLocalStorage()`** persists the notes array to localStorage on every change
+3. **`App.jsx`** orchestrates everything: passes handlers down to Sidebar and NoteEditor
+4. **User actions** (create, delete, pin, edit) call `useNotes()` methods which update state → re-render → auto-save to localStorage
+5. **Auto-save** triggers on every keystroke with a debounced 800ms saving indicator
 
-### Key Design Decisions
+### State Ownership
 
-- **No external state library** — hooks + localStorage is sufficient for this scale
-- **Debounced auto-save** — 400ms delay prevents write contention while keeping data safe
-- **CSS variables for theming** — dark mode uses custom variables and utility overrides
-- **Modular components** — each component has a single responsibility
-- **Self-contained hooks** — business logic lives in hooks, not components
+| State | Owner | Persistence |
+|-------|-------|-------------|
+| Notes array | `useLocalStorage` → `useNotes` | localStorage |
+| Active note ID | `useNotes` | Session only |
+| Search query | `useNotes` | Session only |
+| Dark mode | `App.jsx` | localStorage |
+| Sidebar open | `App.jsx` | Session only |
+| Sort order | `useNotes` | Session only |
 
-## Installation
+---
+
+## Getting Started — Step-by-Step Local Setup
+
+### Prerequisites
+
+Make sure you have these installed on your machine:
+
+- **Node.js** version 18 or higher ([Download](https://nodejs.org/))
+- **npm** (comes with Node.js) or **yarn** (optional)
+- **Git** ([Download](https://git-scm.com/))
+
+### 1. Clone the Repository
+
+Open your terminal (or command prompt / PowerShell on Windows) and run:
 
 ```bash
-# Clone the repository
 git clone https://github.com/glitch-code81/AiProject1.git
 cd AiProject1
+```
 
-# Install dependencies
+This downloads the project to a folder called `AiProject1` and moves into it.
+
+### 2. Install Dependencies
+
+```bash
 npm install
+```
 
-# Start development server
+This reads `package.json` and downloads all required packages (React, Vite, Tailwind CSS, etc.) into a `node_modules/` folder.
+
+### 3. Start the Development Server
+
+```bash
 npm run dev
+```
 
-# Build for production
+You'll see output like:
+
+```
+  VITE v6.4.3  ready in 2632 ms
+
+  ➜  Local:   http://localhost:5173/
+```
+
+Open **http://localhost:5173/** in your browser. The app loads immediately, and any code changes you make will auto-reload the page (Hot Module Replacement).
+
+### 4. Build for Production
+
+When you're ready to deploy or share:
+
+```bash
 npm run build
+```
 
-# Preview production build
+This creates an optimized `dist/` folder with minified HTML, CSS, and JS files. You can serve the `dist/` folder with any static file server.
+
+```bash
 npm run preview
 ```
 
-## Usage
+This starts a local server at `http://localhost:4173/` to preview the production build.
 
-1. Open the app in your browser (default: `http://localhost:5173`)
-2. Click **+ New Note** or press `N` to create a note
-3. Type a title and content — saves automatically after 400ms
-4. Use the **sidebar** to browse, search, pin, or delete notes
-5. Click the **moon/sun icon** (bottom-left) to toggle dark mode
-6. Use **Export / Import** to backup or restore your notes
+### Troubleshooting
 
-### Keyboard Shortcuts
+- **`vite: command not found`** after `npm install` — try `node node_modules/vite/bin/vite.js build` or run `npx vite`
+- **Blank page in browser** — open DevTools (F12) → Console tab to check for JavaScript errors
+- **Port already in use** — Vite will prompt to enter a different port, or set `--port 3000` via `npm run dev -- --port 3000`
+- **Build fails with unexpected error** — delete `node_modules/` and `package-lock.json`, then run `npm install` again
+
+---
+
+## Keyboard Shortcuts
 
 | Shortcut | Action |
 |----------|--------|
-| `N` | Create new note |
-| `Ctrl+F` / `Cmd+F` | Focus search bar |
-| `Esc` | Close sidebar (mobile) |
+| `N` | Create a new note |
+| `Esc` | Close the sidebar (mobile) |
+| `Ctrl+F` / `Cmd+F` | Focus the search bar |
+| Click sort icon | Toggle newest/oldest order |
+
+---
+
+## Usage Guide
+
+1. **Create a note** — Click the "New Note" button or press `N`
+2. **Edit** — Click any note in the sidebar to open it; start typing — auto-save handles the rest
+3. **Search** — Type in the search bar; matching notes are highlighted with yellow background
+4. **Pin** — Hover over a note and click the pin icon to keep it at the top
+5. **Delete** — Hover over a note and click the trash icon; confirm the dialog
+6. **Dark mode** — Click the moon/sun button in the bottom-left corner
+7. **Export** — Click "Export" in the sidebar to download all notes as a JSON file
+8. **Import** — Click "Import" in the sidebar to load notes from a previously exported JSON file
+9. **Sort** — Click the sort icon next to the note count to toggle newest/oldest first
+
+---
+
+## Development Workflow
+
+This project follows a feature-branch workflow:
+
+```
+main (stable) ← merge from feature branches
+├── feat/core-layout        # Responsive sidebar, dark mode toggle
+├── feat/notes-crud         # Import/export, auto-save indicator, word count
+├── feat/pin-search         # Search highlighting, clear button, Ctrl+F
+├── feat/ui-enhancements    # Animations, dark mode polish, toast transitions
+└── feat/docs               # README and documentation
+```
+
+Each feature is developed on its own branch, build-verified, and merged into `main`. Commits use humanized messages (no conventional-commit prefixes).
+
+---
 
 ## Future Improvements
 
-- Markdown preview support
-- Note categories / tags
-- Rich text formatting (bold, italic, lists)
-- Drag-and-drop note reordering
-- Cloud sync (optional)
-- Multiple notebooks
-- Note sharing
-- Collaborative editing
-- PWA support with offline mode
-
-## Development
-
-### Branch Workflow
-
-This project uses feature branches:
-
-```
-main          → Stable, production-ready
-feat/*        → Feature branches (core-layout, notes-crud, etc.)
-```
-
-### Build & Verify
-
-```bash
-npm run build     # Production build
-npm run dev       # Dev server with HMR
-```
-
-## License
-
-MIT — feel free to use, modify, and distribute.
+- [ ] Markdown preview support in the editor
+- [ ] Note categories/tags with filtering
+- [ ] Rich text formatting toolbar
+- [ ] Drag-and-drop note reordering
+- [ ] Multi-device sync (via cloud storage)
+- [ ] Search within note content with scroll-to-match
+- [ ] Undo/redo for note edits
+- [ ] Archive (soft-delete) instead of permanent delete
+- [ ] Customizable accent color
+- [ ] Note templates

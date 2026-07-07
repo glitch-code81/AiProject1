@@ -30,6 +30,7 @@ function ConfirmDialog({ message, onConfirm, onCancel, confirmLabel = 'Delete', 
 export default function App() {
   const {
     notes, allNotes, activeNote, activeNoteId, searchQuery, isSaving,
+    sortNewest, setSortNewest,
     setActiveNoteId, setSearchQuery, createNote, deleteNote, togglePin, updateNote,
     exportNotes, importNotes, clearAllNotes,
   } = useNotes();
@@ -132,6 +133,8 @@ export default function App() {
         onImport={handleImportClick}
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen((prev) => !prev)}
+        sortNewest={sortNewest}
+        onSortToggle={() => setSortNewest((prev) => !prev)}
       />
 
       <div className="flex-1 flex flex-col min-w-0">
