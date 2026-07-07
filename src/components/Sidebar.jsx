@@ -46,6 +46,7 @@ export default function Sidebar({
               onClick={onSelectNote}
               onDelete={onDeleteNote}
               onPin={onPinNote}
+              searchQuery={searchQuery}
             />
           ))
         )}
