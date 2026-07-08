@@ -14,7 +14,7 @@ function TagFilterBar({ allTags, activeTag, onTagSelect }) {
       <div className="flex flex-wrap gap-1.5">
         <button
           onClick={() => onTagSelect(null)}
-          className={`text-[11px] px-2.5 py-1 rounded-full transition-all cursor-pointer font-serif ${
+          className={`inline-flex items-center h-[26px] text-[11px] px-2.5 rounded-full transition-all cursor-pointer font-serif ${
             !activeTag
               ? 'bg-gold/15 text-gold-dark dark:text-gold border border-gold/30 shadow-sm'
               : 'text-ink-400 dark:text-ink-500 hover:text-ink-600 dark:hover:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800 border border-transparent'
@@ -26,7 +26,7 @@ function TagFilterBar({ allTags, activeTag, onTagSelect }) {
           <button
             key={tag}
             onClick={() => onTagSelect(tag)}
-            className={`text-[11px] px-2.5 py-1 rounded-full transition-all cursor-pointer font-serif ${
+            className={`inline-flex items-center h-[26px] text-[11px] px-2.5 rounded-full transition-all cursor-pointer font-serif ${
               activeTag === tag
                 ? 'bg-gold/15 text-gold-dark dark:text-gold border border-gold/30 shadow-sm'
                 : 'text-ink-400 dark:text-ink-500 hover:text-ink-600 dark:hover:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800 border border-transparent'
@@ -57,30 +57,31 @@ export default function Sidebar({
           fixed lg:static inset-y-0 left-0 z-30
           ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        {/* Header */}
+        {/* Sidebar header — aligned items */}
         <div className="p-4 border-b border-ink-200 dark:border-ink-700">
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0">
               <button onClick={onToggle}
-                className="p-1 -ml-1 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-400 dark:text-ink-500 lg:hidden cursor-pointer"
+                className="inline-flex items-center justify-center w-7 h-7 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-400 dark:text-ink-500 lg:hidden cursor-pointer shrink-0"
                 aria-label="Close sidebar">
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                   strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </button>
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg className="w-5 h-5 text-gold shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 20h9" />
                   <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
                 </svg>
-                <h1 className="text-lg font-semibold text-ink-800 dark:text-ink-200 font-display tracking-wide">Quill</h1>
+                <h1 className="text-lg font-semibold text-ink-800 dark:text-ink-200 font-display tracking-wide leading-none">Quill</h1>
               </div>
             </div>
             <div className="flex items-center gap-1">
               <button onClick={onSortToggle}
-                className="p-1.5 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-400 dark:text-ink-500 hover:text-gold-dark dark:hover:text-gold transition-colors cursor-pointer"
-                aria-label="Toggle sort order" title={sortNewest ? 'Sort: newest first' : 'Sort: oldest first'}>
+                className="inline-flex items-center justify-center w-7 h-7 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-400 dark:text-ink-500 hover:text-gold-dark dark:hover:text-gold transition-colors cursor-pointer"
+                aria-label="Toggle sort order" title={sortNewest ? 'Sort: newest first' : 'Sort: oldest first'}
+              >
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                   strokeLinecap="round" strokeLinejoin="round">
                   {sortNewest ? (
@@ -90,18 +91,18 @@ export default function Sidebar({
                   )}
                 </svg>
               </button>
-              <span className="text-xs text-ink-400 dark:text-ink-500 font-serif w-5 text-center">{noteCount}</span>
+              <span className="text-xs text-ink-400 dark:text-ink-500 font-serif w-5 text-center leading-none">{noteCount}</span>
             </div>
           </div>
           <SearchBar value={searchQuery} onChange={onSearchChange} />
         </div>
 
-        {/* Create button */}
+        {/* New Leaf button — properly centered with shadow */}
         <div className="px-4 pt-3 pb-1">
           <button onClick={onCreateNote}
-            className="btn-classical w-full px-4 py-2.5 bg-gradient-to-r from-sepia to-sepia-dark text-parchment rounded-lg hover:from-sepia-dark hover:to-sepia shadow-sm hover:shadow-md active:shadow-sm transition-all text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer font-serif tracking-wide"
+            className="btn-classical w-full h-10 bg-gradient-to-r from-sepia to-sepia-dark text-parchment rounded-lg hover:from-sepia-dark hover:to-sepia shadow-sm hover:shadow-md active:shadow-sm transition-all text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer font-serif tracking-wide"
           >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+            <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
               strokeLinecap="round" strokeLinejoin="round">
               <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
             </svg>
@@ -109,12 +110,12 @@ export default function Sidebar({
           </button>
         </div>
 
-        {/* Export / Import buttons */}
-        <div className="flex gap-1.5 mx-4 mb-2 mt-1">
+        {/* Export / Import buttons — same height, aligned */}
+        <div className="flex gap-2 mx-4 mb-2 mt-1">
           <button onClick={onExport}
-            className="btn-classical flex-1 px-2 py-1.5 text-xs text-ink-500 dark:text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800 rounded-md transition-colors flex items-center justify-center gap-1.5 cursor-pointer font-serif"
+            className="btn-classical flex-1 inline-flex items-center justify-center gap-1.5 h-8 text-xs text-ink-500 dark:text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800 rounded-md transition-colors cursor-pointer font-serif border border-transparent hover:border-ink-200 dark:hover:border-ink-700"
             title="Export notes as JSON">
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+            <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
               strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
@@ -122,9 +123,9 @@ export default function Sidebar({
             Export
           </button>
           <button onClick={onImport}
-            className="btn-classical flex-1 px-2 py-1.5 text-xs text-ink-500 dark:text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800 rounded-md transition-colors flex items-center justify-center gap-1.5 cursor-pointer font-serif"
+            className="btn-classical flex-1 inline-flex items-center justify-center gap-1.5 h-8 text-xs text-ink-500 dark:text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800 rounded-md transition-colors cursor-pointer font-serif border border-transparent hover:border-ink-200 dark:hover:border-ink-700"
             title="Import notes from JSON">
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+            <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
               strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
@@ -167,20 +168,21 @@ export default function Sidebar({
           )}
         </div>
 
-        {/* Footer */}
-        <div className="p-3 border-t border-ink-200 dark:border-ink-700 flex items-center justify-between">
-          <span className="text-[10px] text-ink-300 dark:text-ink-600 tracking-widest uppercase font-sans">
+        {/* Footer — aligned items properly */}
+        <div className="flex items-center justify-between px-4 py-3 border-t border-ink-200 dark:border-ink-700">
+          <span className="text-[10px] text-ink-300 dark:text-ink-600 tracking-widest uppercase font-sans leading-none">
             N · Esc · ⌘F
           </span>
           <button
             onClick={() => setDarkMode((prev) => !prev)}
-            className="p-1.5 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-400 dark:text-ink-500 hover:text-gold-dark dark:hover:text-gold transition-colors cursor-pointer"
+            className="inline-flex items-center justify-center w-7 h-7 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-400 dark:text-ink-500 hover:text-gold-dark dark:hover:text-gold transition-colors cursor-pointer"
             aria-label="Toggle dark mode"
-            title="Toggle dark mode"
+            title={darkMode ? 'Switch to parchment' : 'Switch to dark'}
           >
             {darkMode ? (
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
                 <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
               </svg>
             ) : (

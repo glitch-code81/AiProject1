@@ -27,14 +27,12 @@ export default function EmptyState({ onCreate }) {
 
         <button
           onClick={onCreate}
-          className="btn-classical px-8 py-3 bg-gradient-to-r from-sepia to-sepia-dark text-parchment rounded-lg hover:from-sepia-dark hover:to-sepia shadow-md hover:shadow-lg active:shadow-sm transition-all font-semibold cursor-pointer text-sm font-serif tracking-wide"
+          className="btn-classical inline-flex items-center justify-center h-11 px-8 bg-gradient-to-r from-sepia to-sepia-dark text-parchment rounded-lg hover:from-sepia-dark hover:to-sepia shadow-md hover:shadow-lg active:shadow-sm transition-all font-semibold cursor-pointer text-sm font-serif tracking-wide gap-2"
         >
-          <span className="flex items-center gap-2">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            Begin Writing
-          </span>
+          <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Begin Writing
         </button>
 
         <div className="mt-10 text-xs text-ink-300 dark:text-ink-600 font-serif space-y-1.5">

@@ -46,7 +46,7 @@ export default function Toast({ message, type = 'info', onClose }) {
       <span className="text-sm font-medium font-serif">{message}</span>
       <button
         onClick={() => { setExiting(true); setTimeout(onClose, 200); }}
-        className="ml-2 opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
+        className="inline-flex items-center justify-center w-5 h-5 ml-2 opacity-70 hover:opacity-100 transition-opacity cursor-pointer shrink-0"
         aria-label="Dismiss"
       >
         <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
