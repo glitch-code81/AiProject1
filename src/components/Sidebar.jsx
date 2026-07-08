@@ -95,6 +95,11 @@ export default function Sidebar({
             </div>
           </div>
           <SearchBar value={searchQuery} onChange={onSearchChange} />
+          <div className="ornamental-divider mt-3">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor" className="text-gold/20">
+              <circle cx="12" cy="12" r="1" />
+            </svg>
+          </div>
         </div>
 
         {/* New Leaf button — properly centered with shadow */}

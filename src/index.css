@@ -40,6 +40,8 @@
   background-color: var(--color-parchment);
   color: var(--color-ink-900);
 }
+.font-display { font-family: 'Playfair Display', 'Georgia', serif; }
+.font-serif { font-family: 'Merriweather', 'Crimson Text', Georgia, serif; }
 body { margin: 0; min-height: 100vh; }
 
 .dark { --color-parchment: #1a1510; --color-parchment-dark: #2a221a; }
@@ -47,17 +49,12 @@ body { margin: 0; min-height: 100vh; }
 
 /* ─── Shadow System — Paper Depth ─── */
 
-/* Level 0 — Flat (no depth) */
 .shadow-flat { box-shadow: none; }
-
-/* Level 1 — Paper (single sheet) */
 .shadow-paper {
   box-shadow:
     0 1px 2px rgba(90, 70, 40, 0.06),
     0 1px 4px rgba(90, 70, 40, 0.04);
 }
-
-/* Level 2 — Paper Stack (a few sheets) */
 .shadow-stack {
   box-shadow:
     0 1px 1px rgba(90, 70, 40, 0.08),
@@ -65,8 +62,6 @@ body { margin: 0; min-height: 100vh; }
     0 4px 8px rgba(90, 70, 40, 0.04),
     0 0 0 1px rgba(90, 70, 40, 0.02);
 }
-
-/* Level 3 — Lifted (interactive hover) */
 .shadow-lift {
   box-shadow:
     0 2px 2px rgba(90, 70, 40, 0.10),
@@ -75,8 +70,14 @@ body { margin: 0; min-height: 100vh; }
     0 16px 32px rgba(90, 70, 40, 0.04);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
-
-/* Level 4 — Floating (modal/dialog) */
+.shadow-lift:hover {
+  box-shadow:
+    0 4px 4px rgba(90, 70, 40, 0.12),
+    0 8px 12px rgba(90, 70, 40, 0.10),
+    0 16px 24px rgba(90, 70, 40, 0.08),
+    0 24px 48px rgba(90, 70, 40, 0.06);
+  transform: translateY(-1px);
+}
 .shadow-float {
   box-shadow:
     0 4px 4px rgba(90, 70, 40, 0.12),
@@ -85,8 +86,6 @@ body { margin: 0; min-height: 100vh; }
     0 32px 48px rgba(90, 70, 40, 0.06),
     0 0 0 1px rgba(90, 70, 40, 0.04);
 }
-
-/* Level 5 — Popover (dropdown menus) */
 .shadow-popover {
   box-shadow:
     0 4px 8px rgba(90, 70, 40, 0.15),
@@ -94,102 +93,14 @@ body { margin: 0; min-height: 100vh; }
     0 24px 48px rgba(90, 70, 40, 0.08);
 }
 
-/* Dark mode shadows */
-.dark .shadow-paper {
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.15),
-    0 1px 4px rgba(0, 0, 0, 0.1);
-}
-.dark .shadow-stack {
-  box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.2),
-    0 2px 3px rgba(0, 0, 0, 0.15),
-    0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.dark .shadow-lift {
-  box-shadow:
-    0 2px 2px rgba(0, 0, 0, 0.25),
-    0 4px 6px rgba(0, 0, 0, 0.2),
-    0 8px 16px rgba(0, 0, 0, 0.15),
-    0 16px 32px rgba(0, 0, 0, 0.1);
-}
-.dark .shadow-float {
-  box-shadow:
-    0 4px 4px rgba(0, 0, 0, 0.3),
-    0 8px 12px rgba(0, 0, 0, 0.25),
-    0 16px 24px rgba(0, 0, 0, 0.2),
-    0 32px 48px rgba(0, 0, 0, 0.15);
-}
-.dark .shadow-popover {
-  box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.35),
-    0 12px 24px rgba(0, 0, 0, 0.3),
-    0 24px 48px rgba(0, 0, 0, 0.2);
-}
+.dark .shadow-paper { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), 0 1px 4px rgba(0, 0, 0, 0.1); }
+.dark .shadow-stack { box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 2px 3px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1); }
+.dark .shadow-lift { box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25), 0 4px 6px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.15), 0 16px 32px rgba(0, 0, 0, 0.1); }
+.dark .shadow-float { box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3), 0 8px 12px rgba(0, 0, 0, 0.25), 0 16px 24px rgba(0, 0, 0, 0.2), 0 32px 48px rgba(0, 0, 0, 0.15); }
+.dark .shadow-popover { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35), 0 12px 24px rgba(0, 0, 0, 0.3), 0 24px 48px rgba(0, 0, 0, 0.2); }
 
-/* Legacy aliases (backward compat) */
 .paper-card { background-color: #fdf8f0; border: 1px solid #ede0cc; }
 .dark .paper-card { background-color: #2a221a; border-color: #403528; }
-
-/* Shadow utility aliases for Tailwind v4 */
-.shadow-stack {
-  box-shadow:
-    0 1px 1px rgba(90, 70, 40, 0.08),
-    0 2px 3px rgba(90, 70, 40, 0.06),
-    0 4px 8px rgba(90, 70, 40, 0.04),
-    0 0 0 1px rgba(90, 70, 40, 0.02);
-}
-.dark .shadow-stack {
-  box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.2),
-    0 2px 3px rgba(0, 0, 0, 0.15),
-    0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.shadow-lift {
-  box-shadow:
-    0 2px 2px rgba(90, 70, 40, 0.10),
-    0 4px 6px rgba(90, 70, 40, 0.08),
-    0 8px 16px rgba(90, 70, 40, 0.06),
-    0 16px 32px rgba(90, 70, 40, 0.04);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-.dark .shadow-lift {
-  box-shadow:
-    0 2px 2px rgba(0, 0, 0, 0.25),
-    0 4px 6px rgba(0, 0, 0, 0.2),
-    0 8px 16px rgba(0, 0, 0, 0.15),
-    0 16px 32px rgba(0, 0, 0, 0.1);
-}
-
-.shadow-float {
-  box-shadow:
-    0 4px 4px rgba(90, 70, 40, 0.12),
-    0 8px 12px rgba(90, 70, 40, 0.10),
-    0 16px 24px rgba(90, 70, 40, 0.08),
-    0 32px 48px rgba(90, 70, 40, 0.06),
-    0 0 0 1px rgba(90, 70, 40, 0.04);
-}
-.dark .shadow-float {
-  box-shadow:
-    0 4px 4px rgba(0, 0, 0, 0.3),
-    0 8px 12px rgba(0, 0, 0, 0.25),
-    0 16px 24px rgba(0, 0, 0, 0.2),
-    0 32px 48px rgba(0, 0, 0, 0.15);
-}
-
-.shadow-popover {
-  box-shadow:
-    0 4px 8px rgba(90, 70, 40, 0.15),
-    0 12px 24px rgba(90, 70, 40, 0.12),
-    0 24px 48px rgba(90, 70, 40, 0.08);
-}
-.dark .shadow-popover {
-  box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.35),
-    0 12px 24px rgba(0, 0, 0, 0.3),
-    0 24px 48px rgba(0, 0, 0, 0.2);
-}
 
 /* ─── Book Spine (sidebar right edge shadow) ─── */
 .book-spine {

@@ -173,7 +173,11 @@ export default function NoteEditor({ note, onUpdate, isSaving }) {
             />
 
             {/* Decorative rule */}
-            <div className="h-px bg-gradient-to-r from-ink-200 via-ink-100 to-transparent dark:from-ink-700 dark:via-ink-800 mb-5" />
+            <div className="ornamental-divider mb-5">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor" className="text-gold/30">
+                <circle cx="12" cy="12" r="1.5" />
+              </svg>
+            </div>
 
             {/* Content textarea */}
             <textarea
