@@ -42,28 +42,26 @@ export default function NoteEditor({ note, onUpdate, isSaving }) {
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full">
+    <div className="flex-1 flex flex-col h-full content-fade-in">
       {/* Editor header */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 bg-white shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="text-xs text-gray-400">
-            Created {formatDate(note.createdAt)}
-          </div>
+      <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 bg-white/80 backdrop-blur-sm shrink-0">
+        <div className="flex items-center gap-2 text-xs text-gray-400">
+          <span>Created {formatDate(note.createdAt)}</span>
           {note.updatedAt !== note.createdAt && (
             <>
               <span className="text-gray-300">·</span>
-              <div className="text-xs text-gray-400">
-                Edited {formatDate(note.updatedAt)}
-              </div>
+              <span>Edited {formatDate(note.updatedAt)}</span>
             </>
           )}
         </div>
-        <div className="flex items-center gap-3 text-xs text-gray-400">
-          <span>{wordCount} words</span>
-          <span>{charCount} chars</span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 text-xs text-gray-400">
+            <span className="tabular-nums font-medium">{wordCount} <span className="font-normal text-gray-300">words</span></span>
+            <span className="hidden sm:inline tabular-nums font-medium">{charCount} <span className="font-normal text-gray-300">chars</span></span>
+          </div>
           {isSaving && (
-            <span className="text-indigo-500 animate-pulse flex items-center gap-1">
-              <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" />
+            <span className="text-[11px] text-indigo-500 font-medium flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-900/30 px-2.5 py-1 rounded-full">
+              <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse" />
               Saving
             </span>
           )}
@@ -72,21 +70,22 @@ export default function NoteEditor({ note, onUpdate, isSaving }) {
 
       {/* Editor body */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto px-6 py-8">
+        <div className="max-w-3xl mx-auto px-6 sm:px-10 py-8 sm:py-12">
           <input
             ref={titleRef}
             type="text"
             value={title}
             onChange={handleTitleChange}
             placeholder="Untitled"
-            className="w-full text-3xl font-bold text-gray-800 placeholder-gray-300 border-none outline-none bg-transparent mb-6 focus:ring-0"
+            className="w-full text-3xl sm:text-4xl font-bold text-gray-800 placeholder-gray-300 border-none outline-none bg-transparent mb-6 focus:ring-0 leading-tight tracking-tight"
             aria-label="Note title"
           />
+          <div className="h-px bg-gradient-to-r from-gray-100 via-gray-200 to-transparent mb-6" />
           <textarea
             value={content}
             onChange={handleContentChange}
             placeholder="Start writing..."
-            className="w-full min-h-[calc(100vh-280px)] text-base text-gray-700 placeholder-gray-300 border-none outline-none bg-transparent resize-none focus:ring-0 leading-relaxed"
+            className="w-full min-h-[calc(100vh-300px)] text-base sm:text-lg text-gray-700 placeholder-gray-300 border-none outline-none bg-transparent resize-none focus:ring-0 leading-relaxed"
             aria-label="Note content"
           />
         </div>

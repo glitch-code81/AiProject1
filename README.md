@@ -18,8 +18,11 @@ A modern, responsive note-taking application built with React, Vite, and Tailwin
 - **Import/Export** — Save/load notes as JSON files
 - **Sort toggle** — Switch between newest-first and oldest-first ordering
 - **Keyboard shortcuts** — `N` for new note, `Esc` to close sidebar, `Ctrl+F` to search
-- **Animated UI** — Toast notifications, slide-in list items, floating empty state
+- **Animated UI** — Toast notifications, slide-in list items, floating empty state, content fade-in transitions
 - **Data persistence** — All notes stored in browser localStorage
+- **Polished design** — Gradient buttons, backdrop blur, card hover effects, scrollbar styling, refined typography
+- **Focus-visible states** — Keyboard-friendly focus rings on all interactive elements
+- **Button animations** — Scale press effects, hover lift shadows, smooth dark mode toggle
 
 ---
 
@@ -172,8 +175,9 @@ This starts a local server at `http://localhost:4173/` to preview the production
 | Shortcut | Action |
 |----------|--------|
 | `N` | Create a new note |
-| `Esc` | Close the sidebar (mobile) |
+| `Esc` | Close the sidebar (mobile) / Dismiss dialog |
 | `Ctrl+F` / `Cmd+F` | Focus the search bar |
+| `Enter` | Open a focused note in the list |
 | Click sort icon | Toggle newest/oldest order |
 
 ---

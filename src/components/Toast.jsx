@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 
 const typeStyles = {
-  success: 'bg-green-700 text-white',
-  error: 'bg-red-700 text-white',
-  info: 'bg-gray-800 text-white',
+  success: 'bg-emerald-700 text-white shadow-emerald-900/20',
+  error: 'bg-red-700 text-white shadow-red-900/20',
+  info: 'bg-gray-800 text-white shadow-gray-900/20',
 };
 
 const typeIcons = {
@@ -37,7 +37,7 @@ export default function Toast({ message, type = 'info', onClose }) {
 
   return (
     <div
-      className={`fixed top-4 right-4 z-50 flex items-center gap-2.5 px-4 py-3 rounded-lg shadow-lg ${
+      className={`fixed top-4 right-4 z-[60] flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-xl ${
         typeStyles[type] || typeStyles.info
       } ${exiting ? 'toast-exit' : 'toast-enter'}`}
       role="alert"
@@ -46,7 +46,7 @@ export default function Toast({ message, type = 'info', onClose }) {
       <span className="text-sm font-medium">{message}</span>
       <button
         onClick={() => { setExiting(true); setTimeout(onClose, 200); }}
-        className="ml-2 opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
+        className="ml-1.5 opacity-70 hover:opacity-100 transition-opacity cursor-pointer hover:scale-110 active:scale-90"
         aria-label="Dismiss"
       >
         <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
