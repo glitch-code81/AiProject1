@@ -32,6 +32,8 @@ export function useNotes() {
       title: '',
       content: '',
       pinned: false,
+      color: 'default',
+      tags: [],
       createdAt: now,
       updatedAt: now,
     };

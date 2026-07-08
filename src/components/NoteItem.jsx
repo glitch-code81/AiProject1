@@ -1,4 +1,5 @@
 import { getNotePreview, formatDate } from '../utils/helpers';
+import { getColorClasses } from './ColorPicker';
 
 function highlightText(text, query) {
   if (!query || !text) return text;
@@ -10,34 +11,60 @@ function highlightText(text, query) {
   );
 }
 
-export default function NoteItem({ note, isActive, onClick, onDelete, onPin, searchQuery }) {
+export default function NoteItem({ note, isActive, onClick, onDelete, onPin, searchQuery, onTagClick }) {
   const preview = getNotePreview(note);
+  const colors = getColorClasses(note.color);
 
   return (
     <div
       onClick={() => onClick(note.id)}
-      className={`group relative px-4 py-3 border-b border-gray-100 cursor-pointer transition-colors note-item-enter
-        ${isActive ? 'bg-indigo-50 border-l-2 border-l-indigo-500' : 'hover:bg-gray-50 border-l-2 border-l-transparent'}`}
+      className={`group relative px-4 py-3 border-b border-gray-100 dark:border-slate-700/50 cursor-pointer transition-all duration-150 note-item-enter
+        ${isActive
+          ? 'bg-indigo-50 dark:bg-indigo-950/40 border-l-2 border-l-indigo-500'
+          : `hover:bg-gray-50 dark:hover:bg-slate-700/50 border-l-2 border-l-transparent`}`}
     >
+      {/* Color accent bar */}
+      {note.color && note.color !== 'default' && (
+        <div className={`absolute left-0 top-0 bottom-0 w-1 ${colors.dot.replace('bg-', 'bg-').replace('-400', '-300 dark:bg-').replace('bg-', '')}`} />
+      )}
+
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             {note.pinned && (
-              <svg className="w-3 h-3 text-indigo-500 shrink-0" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <svg className="w-3 h-3 text-indigo-500 dark:text-indigo-400 shrink-0" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                 <path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z" />
               </svg>
             )}
-            <h3 className="text-sm font-medium text-gray-800 truncate leading-tight">
+            <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate leading-tight">
               {searchQuery ? highlightText(preview, searchQuery) : preview}
             </h3>
           </div>
-          <p className="text-xs text-gray-400 mt-0.5">{formatDate(note.updatedAt)}</p>
+          <div className="flex items-center gap-2 mt-0.5">
+            <p className="text-xs text-gray-400 dark:text-gray-500">{formatDate(note.updatedAt)}</p>
+            {note.tags && note.tags.length > 0 && (
+              <div className="flex gap-1">
+                {note.tags.slice(0, 2).map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={(e) => { e.stopPropagation(); onTagClick?.(tag); }}
+                    className="text-[10px] px-1.5 py-0.5 bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/40 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors cursor-pointer"
+                  >
+                    {tag}
+                  </button>
+                ))}
+                {note.tags.length > 2 && (
+                  <span className="text-[10px] text-gray-400 dark:text-gray-500">+{note.tags.length - 2}</span>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
           <button
             onClick={(e) => { e.stopPropagation(); onPin(note.id); }}
-            className="p-1.5 rounded hover:bg-gray-200 text-gray-400 hover:text-indigo-600 cursor-pointer"
+            className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer"
             aria-label={note.pinned ? 'Unpin' : 'Pin'}
             title={note.pinned ? 'Unpin' : 'Pin'}
           >
@@ -53,7 +80,7 @@ export default function NoteItem({ note, isActive, onClick, onDelete, onPin, sea
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onDelete(note.id); }}
-            className="p-1.5 rounded hover:bg-red-100 text-gray-400 hover:text-red-600 cursor-pointer"
+            className="p-1.5 rounded hover:bg-red-100 dark:hover:bg-red-900/40 text-gray-400 hover:text-red-600 dark:hover:text-red-400 cursor-pointer"
             aria-label="Delete note"
             title="Delete"
           >

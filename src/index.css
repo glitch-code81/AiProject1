@@ -106,6 +106,15 @@ body {
 .dark ::-webkit-scrollbar-thumb { background: #475569; }
 .dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
+/* Smooth scrollbar for Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+.dark * {
+  scrollbar-color: #475569 transparent;
+}
+
 /* Toast animation */
 @keyframes toast-slide-in {
   from { opacity: 0; transform: translateY(-12px) scale(0.95); }
@@ -138,4 +147,41 @@ body {
 }
 .empty-state-icon {
   animation: float 3s ease-in-out infinite;
+}
+
+/* General fade-in */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+/* Color accent utilities */
+.bg-red-400 { background-color: #f87171; }
+.bg-orange-400 { background-color: #fb923c; }
+.bg-yellow-400 { background-color: #facc15; }
+.bg-green-400 { background-color: #4ade80; }
+.bg-blue-400 { background-color: #60a5fa; }
+.bg-purple-400 { background-color: #c084fc; }
+.bg-pink-400 { background-color: #f472b6; }
+
+.dark .bg-red-400 { background-color: #b91c1c; }
+.dark .bg-orange-400 { background-color: #c2410c; }
+.dark .bg-yellow-400 { background-color: #a16207; }
+.dark .bg-green-400 { background-color: #15803d; }
+.dark .bg-blue-400 { background-color: #1d4ed8; }
+.dark .bg-purple-400 { background-color: #7c3aed; }
+.dark .bg-pink-400 { background-color: #be185d; }
+
+/* Smooth transitions on note switching */
+.note-transition-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.note-transition-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
 }
