@@ -89,7 +89,7 @@ export default function NoteEditor({ note, onUpdate, isSaving }) {
               <span className="hidden sm:inline">Shade</span>
             </button>
             {showColors && (
-              <div className="absolute right-0 top-full mt-1.5 paper-card paper-stack rounded-lg z-10 p-3 min-w-[200px]">
+              <div className="absolute right-0 top-full mt-1.5 paper-card shadow-popover rounded-lg z-10 p-3 min-w-[200px]">
                 <ColorPicker
                   currentColor={note.color || 'default'}
                   onChange={(color) => {

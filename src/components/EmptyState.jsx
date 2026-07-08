@@ -1,7 +1,7 @@
 export default function EmptyState({ onCreate }) {
   return (
     <div className="flex-1 flex items-center justify-center parchment-bg">
-      <div className="paper-card paper-stack rounded-xl p-12 max-w-md mx-4 text-center animate-fade-in">
+      <div className="paper-card shadow-float rounded-xl p-12 max-w-md mx-4 text-center animate-fade-in">
         {/* Decorative quill icon */}
         <div className="mb-6 text-ink-200 dark:text-ink-700 empty-state-icon">
           <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round">

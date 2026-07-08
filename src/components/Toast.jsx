@@ -37,7 +37,7 @@ export default function Toast({ message, type = 'info', onClose }) {
 
   return (
     <div
-      className={`fixed top-5 right-5 z-50 flex items-center gap-2.5 px-4 py-3 rounded-lg shadow-lg toast-classical ${
+      className={`fixed top-5 right-5 z-50 flex items-center gap-2.5 px-4 py-3 rounded-lg shadow-lift toast-classical ${
         typeStyles[type] || typeStyles.info
       } ${exiting ? 'toast-exit' : 'toast-enter'}`}
       role="alert"

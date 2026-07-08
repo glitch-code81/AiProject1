@@ -37,7 +37,7 @@ export default function SearchBar({ value, onChange }) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search leaves... (⌘F)"
-        className="w-full h-9 pl-9 pr-8 text-sm bg-ink-50 dark:bg-ink-800 border border-ink-200 dark:border-ink-700 rounded-lg text-ink-700 dark:text-ink-300 placeholder-ink-300 dark:placeholder-ink-500 outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all font-serif"
+        className="w-full h-9 pl-9 pr-8 text-sm bg-ink-50 dark:bg-ink-800 border border-ink-200 dark:border-ink-700 rounded-lg text-ink-700 dark:text-ink-300 placeholder-ink-300 dark:placeholder-ink-500 outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all font-serif input-inkwell"
         aria-label="Search notes"
       />
       {value && (

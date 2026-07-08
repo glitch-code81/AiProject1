@@ -71,7 +71,7 @@ export default function TagInput({ tags = [], onChange }) {
           aria-label="Add tag"
         />
         {showSuggestions && suggestions.length > 0 && (
-          <div className="absolute top-full left-0 mt-1 paper-card paper-stack rounded-lg z-10 py-1 min-w-[130px]">
+          <div className="absolute top-full left-0 mt-1 paper-card shadow-popover rounded-lg z-10 py-1 min-w-[130px] max-h-48 overflow-y-auto">
             {suggestions.map((s) => (
               <button
                 key={s}

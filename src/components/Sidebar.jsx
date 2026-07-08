@@ -52,7 +52,7 @@ export default function Sidebar({
         <div className="fixed inset-0 bg-ink-900/40 z-20 lg:hidden" onClick={onToggle} />
       )}
       <aside
-        className={`w-72 shrink-0 paper-card flex flex-col h-full
+        className={`w-72 shrink-0 paper-card book-spine flex flex-col h-full
           transition-transform duration-200 ease-in-out
           fixed lg:static inset-y-0 left-0 z-30
           ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
@@ -100,7 +100,7 @@ export default function Sidebar({
         {/* New Leaf button — properly centered with shadow */}
         <div className="px-4 pt-3 pb-1">
           <button onClick={onCreateNote}
-            className="btn-classical w-full h-10 bg-gradient-to-r from-sepia to-sepia-dark text-parchment rounded-lg hover:from-sepia-dark hover:to-sepia shadow-sm hover:shadow-md active:shadow-sm transition-all text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer font-serif tracking-wide"
+            className="btn-classical w-full h-10 bg-gradient-to-r from-sepia to-sepia-dark text-parchment rounded-lg hover:from-sepia-dark hover:to-sepia shadow-stack hover:shadow-lift active:shadow-stack transition-all text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer font-serif tracking-wide"
           >
             <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
               strokeLinecap="round" strokeLinejoin="round">

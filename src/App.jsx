@@ -8,7 +8,7 @@ import { useNotes } from './hooks/useNotes';
 function ConfirmDialog({ message, onConfirm, onCancel, confirmLabel = 'Delete', danger = true }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/30 dark:bg-ink-950/60 px-4">
-      <div className="paper-card paper-stack rounded-xl p-6 max-w-sm w-full animate-fade-in">
+      <div className="paper-card shadow-float rounded-xl p-6 max-w-sm w-full animate-fade-in">
         <p className="text-ink-800 dark:text-ink-200 mb-6 text-sm font-serif">{message}</p>
         <div className="flex items-center justify-end gap-3">
           <button onClick={onCancel}
@@ -157,7 +157,7 @@ export default function App() {
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile header */}
-        <div className="lg:hidden flex items-center gap-3 px-4 py-3 border-b border-ink-200 dark:border-ink-700 bg-ink-50/80 dark:bg-ink-900/80 backdrop-blur-sm">
+        <div className="lg:hidden flex items-center gap-3 px-4 py-3 border-b border-ink-200 dark:border-ink-700 bg-ink-50/80 dark:bg-ink-900/80 backdrop-blur-sm shadow-paper">
           <button
             onClick={() => setSidebarOpen(true)}
             className="inline-flex items-center justify-center w-8 h-8 -ml-1 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-500 dark:text-ink-400 cursor-pointer shrink-0"
