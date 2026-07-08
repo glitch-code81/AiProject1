@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 
-const PRESET_TAGS = ['personal', 'work', 'ideas', 'todo', 'notes', 'project', 'reference', 'archive'];
+const PRESET_TAGS = ['personal', 'work', 'ideas', 'journal', 'poetry', 'draft', 'reference', 'archive', 'letter'];
 
 export default function TagInput({ tags = [], onChange }) {
   const [input, setInput] = useState('');
@@ -40,12 +40,12 @@ export default function TagInput({ tags = [], onChange }) {
       {tags.map((tag) => (
         <span
           key={tag}
-          className="inline-flex items-center gap-1 px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-full text-xs font-medium group"
+          className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-ink-100 dark:bg-ink-800 text-ink-600 dark:text-ink-300 rounded-full text-xs font-serif italic group"
         >
           {tag}
           <button
             onClick={() => removeTag(tag)}
-            className="opacity-50 group-hover:opacity-100 hover:text-red-500 transition-opacity cursor-pointer"
+            className="opacity-40 group-hover:opacity-100 hover:text-rust transition-all cursor-pointer"
             aria-label={`Remove tag ${tag}`}
           >
             <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -66,17 +66,17 @@ export default function TagInput({ tags = [], onChange }) {
           onKeyDown={handleKeyDown}
           onFocus={() => setShowSuggestions(true)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-          placeholder={tags.length === 0 ? 'Add tags...' : ''}
-          className="text-xs border-none outline-none bg-transparent text-gray-500 dark:text-gray-400 placeholder-gray-300 dark:placeholder-gray-600 w-20"
+          placeholder={tags.length === 0 ? 'Add tag...' : ''}
+          className="text-xs border-none outline-none bg-transparent text-ink-500 dark:text-ink-400 placeholder-ink-300 dark:placeholder-ink-600 w-20 font-serif"
           aria-label="Add tag"
         />
         {showSuggestions && suggestions.length > 0 && (
-          <div className="absolute top-full left-0 mt-1 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg z-10 py-1 min-w-[120px]">
+          <div className="absolute top-full left-0 mt-1 paper-card paper-stack rounded-lg z-10 py-1 min-w-[130px]">
             {suggestions.map((s) => (
               <button
                 key={s}
                 onMouseDown={(e) => { e.preventDefault(); addTag(s); }}
-                className="block w-full text-left px-3 py-1.5 text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 cursor-pointer transition-colors"
+                className="block w-full text-left px-3 py-1.5 text-xs text-ink-700 dark:text-ink-200 hover:bg-ink-100 dark:hover:bg-ink-800 cursor-pointer transition-colors font-serif"
               >
                 {s}
               </button>

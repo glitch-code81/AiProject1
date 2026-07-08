@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 
 const typeStyles = {
-  success: 'bg-green-700 text-white',
-  error: 'bg-red-700 text-white',
-  info: 'bg-gray-800 text-white',
+  success: 'bg-forest-dark dark:bg-forest text-parchment',
+  error: 'bg-rust-dark dark:bg-rust text-parchment',
+  info: 'bg-ink-700 dark:bg-ink-600 text-ink-50',
 };
 
 const typeIcons = {
@@ -37,13 +37,13 @@ export default function Toast({ message, type = 'info', onClose }) {
 
   return (
     <div
-      className={`fixed top-4 right-4 z-50 flex items-center gap-2.5 px-4 py-3 rounded-lg shadow-lg ${
+      className={`fixed top-5 right-5 z-50 flex items-center gap-2.5 px-4 py-3 rounded-lg shadow-lg toast-classical ${
         typeStyles[type] || typeStyles.info
       } ${exiting ? 'toast-exit' : 'toast-enter'}`}
       role="alert"
     >
       {typeIcons[type] || typeIcons.info}
-      <span className="text-sm font-medium">{message}</span>
+      <span className="text-sm font-medium font-serif">{message}</span>
       <button
         onClick={() => { setExiting(true); setTimeout(onClose, 200); }}
         className="ml-2 opacity-70 hover:opacity-100 transition-opacity cursor-pointer"

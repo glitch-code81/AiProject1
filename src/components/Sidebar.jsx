@@ -1,18 +1,23 @@
 import SearchBar from './SearchBar';
 import NoteItem from './NoteItem';
 
-function TagFilter({ allTags, activeTag, onTagSelect }) {
+function TagFilterBar({ allTags, activeTag, onTagSelect }) {
   if (!allTags || allTags.length === 0) return null;
 
   return (
     <div className="px-4 pb-2">
-      <div className="flex flex-wrap gap-1">
+      <div className="ornamental-divider mb-2">
+        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+        </svg>
+      </div>
+      <div className="flex flex-wrap gap-1.5">
         <button
           onClick={() => onTagSelect(null)}
-          className={`text-[11px] px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
+          className={`text-[11px] px-2.5 py-1 rounded-full transition-all cursor-pointer font-serif ${
             !activeTag
-              ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 font-medium'
-              : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700'
+              ? 'bg-gold/15 text-gold-dark dark:text-gold border border-gold/30 shadow-sm'
+              : 'text-ink-400 dark:text-ink-500 hover:text-ink-600 dark:hover:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800 border border-transparent'
           }`}
         >
           All
@@ -21,10 +26,10 @@ function TagFilter({ allTags, activeTag, onTagSelect }) {
           <button
             key={tag}
             onClick={() => onTagSelect(tag)}
-            className={`text-[11px] px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
+            className={`text-[11px] px-2.5 py-1 rounded-full transition-all cursor-pointer font-serif ${
               activeTag === tag
-                ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 font-medium'
-                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700'
+                ? 'bg-gold/15 text-gold-dark dark:text-gold border border-gold/30 shadow-sm'
+                : 'text-ink-400 dark:text-ink-500 hover:text-ink-600 dark:hover:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800 border border-transparent'
             }`}
           >
             {tag}
@@ -39,36 +44,42 @@ export default function Sidebar({
   notes, activeNoteId, searchQuery, noteCount,
   onSelectNote, onSearchChange, onCreateNote, onDeleteNote, onPinNote,
   onExport, onImport, isOpen, onToggle, sortNewest, onSortToggle,
-  activeTag, onTagSelect, allTags,
+  activeTag, onTagSelect, allTags, darkMode, setDarkMode,
 }) {
-
   return (
     <>
       {isOpen && (
-        <div className="fixed inset-0 bg-black/30 z-20 lg:hidden" onClick={onToggle} />
+        <div className="fixed inset-0 bg-ink-900/40 z-20 lg:hidden" onClick={onToggle} />
       )}
       <aside
-        className={`w-72 shrink-0 bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 flex flex-col h-full
+        className={`w-72 shrink-0 paper-card flex flex-col h-full
           transition-transform duration-200 ease-in-out
           fixed lg:static inset-y-0 left-0 z-30
           ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        <div className="p-4 border-b border-gray-200 dark:border-slate-700">
+        {/* Header */}
+        <div className="p-4 border-b border-ink-200 dark:border-ink-700">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <button onClick={onToggle}
-                className="p-1 -ml-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-500 dark:text-gray-400 lg:hidden cursor-pointer"
+                className="p-1 -ml-1 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-400 dark:text-ink-500 lg:hidden cursor-pointer"
                 aria-label="Close sidebar">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                   strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </button>
-              <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Notes</h1>
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                </svg>
+                <h1 className="text-lg font-semibold text-ink-800 dark:text-ink-200 font-display tracking-wide">Quill</h1>
+              </div>
             </div>
             <div className="flex items-center gap-1">
               <button onClick={onSortToggle}
-                className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-400 dark:text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+                className="p-1.5 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-400 dark:text-ink-500 hover:text-gold-dark dark:hover:text-gold transition-colors cursor-pointer"
                 aria-label="Toggle sort order" title={sortNewest ? 'Sort: newest first' : 'Sort: oldest first'}>
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                   strokeLinecap="round" strokeLinejoin="round">
@@ -79,24 +90,29 @@ export default function Sidebar({
                   )}
                 </svg>
               </button>
-              <span className="text-xs text-gray-400 dark:text-gray-500">{noteCount}</span>
+              <span className="text-xs text-ink-400 dark:text-ink-500 font-serif w-5 text-center">{noteCount}</span>
             </div>
           </div>
           <SearchBar value={searchQuery} onChange={onSearchChange} />
         </div>
 
-        <button onClick={onCreateNote}
-          className="mx-4 mt-3 mb-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium flex items-center justify-center gap-2 cursor-pointer">
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-            strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-          New Note
-        </button>
+        {/* Create button */}
+        <div className="px-4 pt-3 pb-1">
+          <button onClick={onCreateNote}
+            className="btn-classical w-full px-4 py-2.5 bg-gradient-to-r from-sepia to-sepia-dark text-parchment rounded-lg hover:from-sepia-dark hover:to-sepia shadow-sm hover:shadow-md active:shadow-sm transition-all text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer font-serif tracking-wide"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+              strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            New Leaf
+          </button>
+        </div>
 
-        <div className="flex gap-1 mx-4 mb-2">
+        {/* Export / Import buttons */}
+        <div className="flex gap-1.5 mx-4 mb-2 mt-1">
           <button onClick={onExport}
-            className="flex-1 px-2 py-1.5 text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors flex items-center justify-center gap-1 cursor-pointer"
+            className="btn-classical flex-1 px-2 py-1.5 text-xs text-ink-500 dark:text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800 rounded-md transition-colors flex items-center justify-center gap-1.5 cursor-pointer font-serif"
             title="Export notes as JSON">
             <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
               strokeLinecap="round" strokeLinejoin="round">
@@ -106,7 +122,7 @@ export default function Sidebar({
             Export
           </button>
           <button onClick={onImport}
-            className="flex-1 px-2 py-1.5 text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors flex items-center justify-center gap-1 cursor-pointer"
+            className="btn-classical flex-1 px-2 py-1.5 text-xs text-ink-500 dark:text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800 rounded-md transition-colors flex items-center justify-center gap-1.5 cursor-pointer font-serif"
             title="Import notes from JSON">
             <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
               strokeLinecap="round" strokeLinejoin="round">
@@ -118,33 +134,61 @@ export default function Sidebar({
         </div>
 
         {/* Tag filter */}
-        <TagFilter allTags={allTags} activeTag={activeTag} onTagSelect={onTagSelect} />
+        <TagFilterBar allTags={allTags} activeTag={activeTag} onTagSelect={onTagSelect} />
 
+        {/* Scrollable note list */}
         <div className="flex-1 overflow-y-auto">
           {notes.length === 0 ? (
-            <div className="p-6 text-center text-sm text-gray-400 dark:text-gray-500">
-              {searchQuery ? 'No notes match your search' : 'No notes yet'}
+            <div className="p-8 text-center">
+              <svg className="w-10 h-10 mx-auto mb-3 text-ink-200 dark:text-ink-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+              </svg>
+              <p className="text-sm text-ink-400 dark:text-ink-500 font-serif italic">
+                {searchQuery ? 'No leaves match your search' : 'The pages are blank'}
+              </p>
             </div>
           ) : (
-            notes.map((note) => (
-              <NoteItem
-                key={note.id}
-                note={note}
-                isActive={note.id === activeNoteId}
-                onClick={(id) => { onSelectNote(id); onToggle(); }}
-                onDelete={onDeleteNote}
-                onPin={onPinNote}
-                searchQuery={searchQuery}
-                onTagClick={onTagSelect}
-              />
-            ))
+            <div className="paper-texture">
+              {notes.map((note, idx) => (
+                <NoteItem
+                  key={note.id}
+                  note={note}
+                  isActive={note.id === activeNoteId}
+                  onClick={(id) => { onSelectNote(id); onToggle(); }}
+                  onDelete={onDeleteNote}
+                  onPin={onPinNote}
+                  searchQuery={searchQuery}
+                  onTagClick={onTagSelect}
+                  index={idx}
+                />
+              ))}
+            </div>
           )}
         </div>
 
-        <div className="p-3 border-t border-gray-100 dark:border-slate-700 text-center">
-          <span className="text-[10px] text-gray-300 dark:text-gray-600 tracking-wider uppercase">
-            N + New · Esc · Ctrl+F Search
+        {/* Footer */}
+        <div className="p-3 border-t border-ink-200 dark:border-ink-700 flex items-center justify-between">
+          <span className="text-[10px] text-ink-300 dark:text-ink-600 tracking-widest uppercase font-sans">
+            N · Esc · ⌘F
           </span>
+          <button
+            onClick={() => setDarkMode((prev) => !prev)}
+            className="p-1.5 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-400 dark:text-ink-500 hover:text-gold-dark dark:hover:text-gold transition-colors cursor-pointer"
+            aria-label="Toggle dark mode"
+            title="Toggle dark mode"
+          >
+            {darkMode ? (
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              </svg>
+            ) : (
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            )}
+          </button>
         </div>
       </aside>
     </>

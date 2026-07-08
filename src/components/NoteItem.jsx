@@ -6,55 +6,56 @@ function highlightText(text, query) {
   const parts = text.split(new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'));
   return parts.map((part, i) =>
     part.toLowerCase() === query.toLowerCase()
-      ? <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 rounded-sm px-0.5">{part}</mark>
+      ? <mark key={i} className="bg-gold/20 text-ink-800 dark:text-ink-200 rounded-sm px-0.5">{part}</mark>
       : part
   );
 }
 
-export default function NoteItem({ note, isActive, onClick, onDelete, onPin, searchQuery, onTagClick }) {
+export default function NoteItem({ note, isActive, onClick, onDelete, onPin, searchQuery, onTagClick, index = 0 }) {
   const preview = getNotePreview(note);
   const colors = getColorClasses(note.color);
 
   return (
     <div
       onClick={() => onClick(note.id)}
-      className={`group relative px-4 py-3 border-b border-gray-100 dark:border-slate-700/50 cursor-pointer transition-all duration-150 note-item-enter
+      className={`group relative px-4 py-3 cursor-pointer transition-all duration-150 note-curl-enter
         ${isActive
-          ? 'bg-indigo-50 dark:bg-indigo-950/40 border-l-2 border-l-indigo-500'
-          : `hover:bg-gray-50 dark:hover:bg-slate-700/50 border-l-2 border-l-transparent`}`}
+          ? 'note-classical-active'
+          : 'hover:bg-ink-50/50 dark:hover:bg-ink-800/30 border-l-2 border-l-transparent'}`}
+      style={{ animationDelay: `${index * 30}ms` }}
     >
-      {/* Color accent bar */}
+      {/* Color accent gauge */}
       {note.color && note.color !== 'default' && (
-        <div className={`absolute left-0 top-0 bottom-0 w-1 ${colors.dot.replace('bg-', 'bg-').replace('-400', '-300 dark:bg-').replace('bg-', '')}`} />
+        <div className={`absolute left-0 top-2 bottom-2 w-1 rounded-full ${note.color === 'red' ? 'bg-rust' : note.color === 'orange' ? 'bg-orange-400' : note.color === 'yellow' ? 'bg-gold' : note.color === 'green' ? 'bg-forest' : note.color === 'blue' ? 'bg-blue-400' : note.color === 'purple' ? 'bg-purple-400' : note.color === 'pink' ? 'bg-wine-light' : ''}`} />
       )}
 
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             {note.pinned && (
-              <svg className="w-3 h-3 text-indigo-500 dark:text-indigo-400 shrink-0" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <svg className="w-3 h-3 text-gold shrink-0" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                 <path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z" />
               </svg>
             )}
-            <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate leading-tight">
+            <h3 className="text-sm font-semibold text-ink-800 dark:text-ink-200 truncate leading-tight font-serif">
               {searchQuery ? highlightText(preview, searchQuery) : preview}
             </h3>
           </div>
           <div className="flex items-center gap-2 mt-0.5">
-            <p className="text-xs text-gray-400 dark:text-gray-500">{formatDate(note.updatedAt)}</p>
+            <p className="text-[11px] text-ink-400 dark:text-ink-500 font-serif">{formatDate(note.updatedAt)}</p>
             {note.tags && note.tags.length > 0 && (
               <div className="flex gap-1">
                 {note.tags.slice(0, 2).map((tag) => (
                   <button
                     key={tag}
                     onClick={(e) => { e.stopPropagation(); onTagClick?.(tag); }}
-                    className="text-[10px] px-1.5 py-0.5 bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/40 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors cursor-pointer"
+                    className="text-[10px] px-1.5 py-0.5 bg-ink-100 dark:bg-ink-800 text-ink-500 dark:text-ink-400 rounded-full hover:bg-gold/10 hover:text-gold-dark dark:hover:text-gold transition-colors cursor-pointer font-serif"
                   >
                     {tag}
                   </button>
                 ))}
                 {note.tags.length > 2 && (
-                  <span className="text-[10px] text-gray-400 dark:text-gray-500">+{note.tags.length - 2}</span>
+                  <span className="text-[10px] text-ink-400 dark:text-ink-500 font-serif">+{note.tags.length - 2}</span>
                 )}
               </div>
             )}
@@ -64,9 +65,9 @@ export default function NoteItem({ note, isActive, onClick, onDelete, onPin, sea
         <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
           <button
             onClick={(e) => { e.stopPropagation(); onPin(note.id); }}
-            className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer"
+            className="p-1.5 rounded hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-400 hover:text-gold-dark dark:hover:text-gold cursor-pointer"
             aria-label={note.pinned ? 'Unpin' : 'Pin'}
-            title={note.pinned ? 'Unpin' : 'Pin'}
+            title={note.pinned ? 'Unmark' : 'Mark'}
           >
             {note.pinned ? (
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" stroke="none">
@@ -80,9 +81,9 @@ export default function NoteItem({ note, isActive, onClick, onDelete, onPin, sea
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onDelete(note.id); }}
-            className="p-1.5 rounded hover:bg-red-100 dark:hover:bg-red-900/40 text-gray-400 hover:text-red-600 dark:hover:text-red-400 cursor-pointer"
+            className="p-1.5 rounded hover:bg-rust/10 text-ink-400 hover:text-rust cursor-pointer"
             aria-label="Delete note"
-            title="Delete"
+            title="Discard"
           >
             <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
