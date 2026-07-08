@@ -61,8 +61,8 @@ export default function NoteEditor({ note, onUpdate, isSaving }) {
         <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Save indicator */}
           {isSaving && (
-            <span className="flex items-center gap-1.5 text-xs text-gold animate-pulse font-serif mr-1">
-              <span className="w-2 h-2 bg-gold rounded-full shrink-0" />
+            <span className="flex items-center gap-1.5 text-xs text-gold font-serif mr-1 shimmer rounded px-1.5">
+              <span className="w-2 h-2 bg-gold rounded-full shrink-0 animate-pulse" />
               <span className="hidden sm:inline">Quill...</span>
             </span>
           )}
@@ -89,7 +89,7 @@ export default function NoteEditor({ note, onUpdate, isSaving }) {
               <span className="hidden sm:inline">Shade</span>
             </button>
             {showColors && (
-              <div className="absolute right-0 top-full mt-1.5 paper-card shadow-popover rounded-lg z-10 p-3 min-w-[200px]">
+              <div className="absolute right-0 top-full mt-1.5 paper-card shadow-popover rounded-lg z-10 p-3 min-w-[200px] scale-in">
                 <ColorPicker
                   currentColor={note.color || 'default'}
                   onChange={(color) => {

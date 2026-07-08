@@ -21,13 +21,12 @@ export default function NoteItem({ note, isActive, onClick, onDelete, onPin, sea
   return (
     <div
       onClick={() => onClick(note.id)}
-      className={`group relative flex items-start gap-2 px-4 py-3 cursor-pointer transition-all duration-150 note-curl-enter
+      className={`group relative flex items-start gap-2 px-4 py-3 cursor-pointer transition-all duration-150 shadow-lift note-curl-enter
         ${isActive
           ? 'note-classical-active'
           : 'hover:bg-ink-50/50 dark:hover:bg-ink-800/30'
         }`}
-      style={{ animationDelay: `${index * 30}ms` }}
-    >
+      style={{ animationDelay: `${index * 40}ms` }}>
       {/* Color accent bar */}
       {note.color && note.color !== 'default' && (
         <div className={`w-1 self-stretch rounded-full shrink-0 mt-1 ${

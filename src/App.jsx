@@ -173,8 +173,8 @@ export default function App() {
           <div className="flex items-center gap-2 ml-auto">
             <span className="text-xs text-ink-400 dark:text-ink-500 font-serif leading-none">{allNotes.length}</span>
             {isSaving && (
-              <span className="flex items-center gap-1 text-xs text-gold animate-pulse font-serif">
-                <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+              <span className="flex items-center gap-1 text-xs text-gold font-serif shimmer rounded px-1.5">
+                <span className="w-1.5 h-1.5 bg-gold rounded-full animate-pulse" />
                 Quill moving...
               </span>
             )}

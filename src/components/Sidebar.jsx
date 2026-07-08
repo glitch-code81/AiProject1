@@ -100,7 +100,7 @@ export default function Sidebar({
         {/* New Leaf button — properly centered with shadow */}
         <div className="px-4 pt-3 pb-1">
           <button onClick={onCreateNote}
-            className="btn-classical w-full h-10 bg-gradient-to-r from-sepia to-sepia-dark text-parchment rounded-lg hover:from-sepia-dark hover:to-sepia shadow-stack hover:shadow-lift active:shadow-stack transition-all text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer font-serif tracking-wide"
+            className="btn-classical w-full h-10 bg-gradient-to-r from-sepia to-sepia-dark text-parchment rounded-lg hover:from-sepia-dark hover:to-sepia shadow-stack hover:shadow-lift active:shadow-stack transition-all text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer font-serif tracking-wide pulse-glow"
           >
             <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
               strokeLinecap="round" strokeLinejoin="round">
