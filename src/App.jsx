@@ -58,7 +58,7 @@ export default function App() {
   const {
     notes, allNotes, activeNote, activeNoteId, searchQuery, isSaving,
     sortNewest, setSortNewest,
-    setActiveNoteId, setSearchQuery, createNote, deleteNote, togglePin, updateNote,
+    setActiveNoteId, setSearchQuery, createNote, deleteNote, togglePin, setNoteColor, updateNote,
     exportNotes, importNotes, clearAllNotes,
   } = useNotes();
 
@@ -190,7 +190,8 @@ export default function App() {
         {!hasNotes && !activeNote ? (
           <EmptyState onCreate={handleCreateNote} />
         ) : (
-          <NoteEditor note={activeNote} onUpdate={updateNote} isSaving={isSaving} />
+          <NoteEditor note={activeNote} onUpdate={updateNote} isSaving={isSaving}
+            onSetColor={setNoteColor} />
         )}
       </div>
 

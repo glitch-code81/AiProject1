@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { formatDate } from '../utils/helpers';
+import ColorPicker from './ColorPicker';
 
-export default function NoteEditor({ note, onUpdate, isSaving }) {
+export default function NoteEditor({ note, onUpdate, isSaving, onSetColor }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const titleRef = useRef(null);
@@ -55,6 +56,7 @@ export default function NoteEditor({ note, onUpdate, isSaving }) {
           )}
         </div>
         <div className="flex items-center gap-3">
+          <ColorPicker color={note.color || null} onChange={(c) => onSetColor(note.id, c)} />
           <div className="flex items-center gap-3 text-xs text-gray-400">
             <span className="tabular-nums font-medium">{wordCount} <span className="font-normal text-gray-300">words</span></span>
             <span className="hidden sm:inline tabular-nums font-medium">{charCount} <span className="font-normal text-gray-300">chars</span></span>

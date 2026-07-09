@@ -32,6 +32,7 @@ export function useNotes() {
       title: '',
       content: '',
       pinned: false,
+      color: null,
       createdAt: now,
       updatedAt: now,
     };
@@ -52,6 +53,15 @@ export function useNotes() {
     (id) => {
       setNotes((prev) =>
         prev.map((n) => (n.id === id ? { ...n, pinned: !n.pinned } : n))
+      );
+    },
+    [setNotes]
+  );
+
+  const setNoteColor = useCallback(
+    (id, color) => {
+      setNotes((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, color, updatedAt: new Date().toISOString() } : n))
       );
     },
     [setNotes]
@@ -126,6 +136,7 @@ export function useNotes() {
     createNote,
     deleteNote,
     togglePin,
+    setNoteColor,
     updateNote,
     exportNotes,
     importNotes,
