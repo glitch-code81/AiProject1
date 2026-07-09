@@ -23,6 +23,11 @@ A modern, responsive note-taking application built with React, Vite, and Tailwin
 - **Polished design** — Gradient buttons, backdrop blur, card hover effects, scrollbar styling, refined typography
 - **Focus-visible states** — Keyboard-friendly focus rings on all interactive elements
 - **Button animations** — Scale press effects, hover lift shadows, smooth dark mode toggle
+- **Markdown preview** — Toggle between editing and live rendered markdown preview
+- **Note tags** — Add color-coded tags to notes with sidebar filter chips
+- **Archive notes** — Soft-delete notes with archive view, restore, and permanent delete
+- **Note colors** — Custom accent color per note with 8 preset colors
+- **Undo/Redo** — Full undo/redo history with Ctrl+Z / Ctrl+Y shortcuts
 
 ---
 
@@ -177,6 +182,8 @@ This starts a local server at `http://localhost:4173/` to preview the production
 | `N` | Create a new note |
 | `Esc` | Close the sidebar (mobile) / Dismiss dialog |
 | `Ctrl+F` / `Cmd+F` | Focus the search bar |
+| `Ctrl+Z` | Undo edit |
+| `Ctrl+Y` / `Ctrl+Shift+Z` | Redo edit |
 | `Enter` | Open a focused note in the list |
 | Click sort icon | Toggle newest/oldest order |
 
@@ -206,7 +213,12 @@ main (stable) ← merge from feature branches
 ├── feat/notes-crud         # Import/export, auto-save indicator, word count
 ├── feat/pin-search         # Search highlighting, clear button, Ctrl+F
 ├── feat/ui-enhancements    # Animations, dark mode polish, toast transitions
-└── feat/docs               # README and documentation
+├── feat/docs               # README and documentation
+├── feat/markdown-preview   # Live markdown preview toggle in editor
+├── feat/tags               # Tag support with filter chips
+├── feat/archive            # Soft-delete archive with restore
+├── feat/note-colors        # Custom accent colors per note
+└── feat/undo-redo          # Undo/redo history with keyboard shortcuts
 ```
 
 Each feature is developed on its own branch, build-verified, and merged into `main`. Commits use humanized messages (no conventional-commit prefixes).
