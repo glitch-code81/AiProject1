@@ -6,11 +6,16 @@ export function useNotes() {
   const [notes, setNotes] = useLocalStorage('notes-app-notes', []);
   const [activeNoteId, setActiveNoteId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showArchived, setShowArchived] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const saveTimer = useRef(null);
   const [sortNewest, setSortNewest] = useState(true);
 
   const filtered = notes
+    .filter((n) => {
+      if (showArchived) return n.archived === true;
+      return !n.archived;
+    })
     .filter((n) => {
       if (!searchQuery) return true;
       const q = searchQuery.toLowerCase();
@@ -32,6 +37,7 @@ export function useNotes() {
       title: '',
       content: '',
       pinned: false,
+      archived: false,
       createdAt: now,
       updatedAt: now,
     };
@@ -56,6 +62,30 @@ export function useNotes() {
     },
     [setNotes]
   );
+
+  const archiveNote = useCallback(
+    (id) => {
+      setNotes((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, archived: true } : n))
+      );
+      setActiveNoteId((prev) => (prev === id ? null : prev));
+    },
+    [setNotes]
+  );
+
+  const restoreNote = useCallback(
+    (id) => {
+      setNotes((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, archived: false } : n))
+      );
+      setActiveNoteId(id);
+    },
+    [setNotes]
+  );
+
+  const clearArchived = useCallback(() => {
+    setNotes((prev) => prev.filter((n) => !n.archived));
+  }, [setNotes]);
 
   const updateNote = useCallback(
     (id, updates) => {
@@ -115,17 +145,22 @@ export function useNotes() {
   return {
     notes: filtered,
     allNotes: notes,
+    showArchived,
     activeNote,
     activeNoteId,
     searchQuery,
     isSaving,
     sortNewest,
     setSortNewest,
+    setShowArchived,
     setActiveNoteId,
     setSearchQuery,
     createNote,
     deleteNote,
     togglePin,
+    archiveNote,
+    restoreNote,
+    clearArchived,
     updateNote,
     exportNotes,
     importNotes,

@@ -3,7 +3,9 @@ import NoteItem from './NoteItem';
 
 export default function Sidebar({
   notes, activeNoteId, searchQuery, noteCount,
-  onSelectNote, onSearchChange, onCreateNote, onDeleteNote, onPinNote,
+  showArchived,
+  onSelectNote, onSearchChange, onToggleArchiveView, onCreateNote, onDeleteNote,
+  onArchiveNote, onRestoreNote, onPinNote,
   onExport, onImport, isOpen, onToggle, sortNewest, onSortToggle,
 }) {
   return (
@@ -29,9 +31,22 @@ export default function Sidebar({
                   <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </button>
-              <h1 className="text-lg font-semibold text-gray-800 tracking-tight">Notes</h1>
+              <h1 className="text-lg font-semibold text-gray-800 tracking-tight">{showArchived ? 'Archive' : 'Notes'}</h1>
             </div>
             <div className="flex items-center gap-1">
+              <button onClick={onToggleArchiveView}
+                className={`p-1.5 rounded-lg transition-colors cursor-pointer active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 ${
+                  showArchived
+                    ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'
+                    : 'text-gray-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20'
+                }`}
+                aria-label={showArchived ? 'Show active notes' : 'Show archived notes'}
+                title={showArchived ? 'Show active notes' : 'Show archived notes'}>
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                  strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 8V5H3v3" /><path d="M3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5" /><path d="M10 12h4" />
+                </svg>
+              </button>
               <button onClick={onSortToggle}
                 className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-indigo-600 transition-colors cursor-pointer active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
                 aria-label="Toggle sort order" title={sortNewest ? 'Sort: newest first' : 'Sort: oldest first'}>
@@ -50,15 +65,17 @@ export default function Sidebar({
           <SearchBar value={searchQuery} onChange={onSearchChange} />
         </div>
 
-        {/* New Note button */}
-        <button onClick={onCreateNote}
-          className="mx-4 mt-3 mb-1 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-xl hover:from-indigo-700 hover:to-indigo-600 transition-all text-sm font-medium flex items-center justify-center gap-2 cursor-pointer shadow-sm shadow-indigo-200 hover:shadow-md hover:shadow-indigo-200 hover:-translate-y-0.5 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-            strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-          New Note
-        </button>
+        {/* New Note button - only show when not viewing archive */}
+        {!showArchived && (
+          <button onClick={onCreateNote}
+            className="mx-4 mt-3 mb-1 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-xl hover:from-indigo-700 hover:to-indigo-600 transition-all text-sm font-medium flex items-center justify-center gap-2 cursor-pointer shadow-sm shadow-indigo-200 hover:shadow-md hover:shadow-indigo-200 hover:-translate-y-0.5 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+              strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            New Note
+          </button>
+        )}
 
         {/* Import/Export buttons */}
         <div className="flex gap-1.5 mx-4 mb-2 mt-2">
@@ -88,6 +105,15 @@ export default function Sidebar({
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
           {notes.length === 0 ? (
             <div className="p-8 text-center">
+              {showArchived ? (
+                <>
+                  <svg className="w-8 h-8 mx-auto mb-2 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 8V5H3v3" /><path d="M3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5" /><path d="M10 12h4" />
+                  </svg>
+                  <p className="text-sm text-gray-400 mt-2">No archived notes</p>
+                </>
+              ) : (
+              <>
               <svg className="w-8 h-8 mx-auto mb-2 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                 <polyline points="14 2 14 8 20 8" />
@@ -99,6 +125,7 @@ export default function Sidebar({
               {searchQuery && (
                 <p className="text-xs text-gray-300 mt-1">Try a different keyword</p>
               )}
+              </>)}
             </div>
           ) : (
             <div className="py-1">
@@ -110,7 +137,10 @@ export default function Sidebar({
                   onClick={(id) => { onSelectNote(id); onToggle(); }}
                   onDelete={onDeleteNote}
                   onPin={onPinNote}
+                  onArchive={onArchiveNote}
+                  onRestore={onRestoreNote}
                   searchQuery={searchQuery}
+                  showArchived={showArchived}
                 />
               ))}
             </div>

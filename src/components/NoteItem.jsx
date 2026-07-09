@@ -10,7 +10,7 @@ function highlightText(text, query) {
   );
 }
 
-export default function NoteItem({ note, isActive, onClick, onDelete, onPin, searchQuery }) {
+export default function NoteItem({ note, isActive, onClick, onDelete, onPin, onArchive, onRestore, searchQuery, showArchived }) {
   const preview = getNotePreview(note);
 
   return (
@@ -46,32 +46,59 @@ export default function NoteItem({ note, isActive, onClick, onDelete, onPin, sea
         </div>
 
         <div className={`flex gap-0.5 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity duration-150`}>
-          <button
-            onClick={(e) => { e.stopPropagation(); onPin(note.id); }}
-            className="p-1.5 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer transition-colors active:scale-90"
-            aria-label={note.pinned ? 'Unpin' : 'Pin'}
-            title={note.pinned ? 'Unpin' : 'Pin'}
-          >
-            {note.pinned ? (
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                <path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z" />
-              </svg>
-            ) : (
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="20" x2="12" y2="4" /><line x1="4" y1="12" x2="20" y2="12" />
-              </svg>
-            )}
-          </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); onDelete(note.id); }}
-            className="p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 text-gray-400 hover:text-red-600 dark:hover:text-red-400 cursor-pointer transition-colors active:scale-90"
-            aria-label="Delete note"
-            title="Delete"
-          >
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-            </svg>
-          </button>
+          {showArchived ? (
+            <>
+              <button
+                onClick={(e) => { e.stopPropagation(); onRestore(note.id); }}
+                className="p-1.5 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/30 text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 cursor-pointer transition-colors active:scale-90"
+                aria-label="Restore"
+                title="Restore"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                </svg>
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); onDelete(note.id); }}
+                className="p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 text-gray-400 hover:text-red-600 dark:hover:text-red-400 cursor-pointer transition-colors active:scale-90"
+                aria-label="Delete permanently"
+                title="Delete permanently"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={(e) => { e.stopPropagation(); onPin(note.id); }}
+                className="p-1.5 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer transition-colors active:scale-90"
+                aria-label={note.pinned ? 'Unpin' : 'Pin'}
+                title={note.pinned ? 'Unpin' : 'Pin'}
+              >
+                {note.pinned ? (
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                    <path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z" />
+                  </svg>
+                ) : (
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="12" y1="20" x2="12" y2="4" /><line x1="4" y1="12" x2="20" y2="12" />
+                  </svg>
+                )}
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); onArchive(note.id); }}
+                className="p-1.5 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/30 text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer transition-colors active:scale-90"
+                aria-label="Archive"
+                title="Archive"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 8V5H3v3" /><path d="M3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5" /><path d="M10 12h4" />
+                </svg>
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
