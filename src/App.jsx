@@ -56,9 +56,10 @@ function ConfirmDialog({ message, onConfirm, onCancel, confirmLabel = 'Delete', 
 
 export default function App() {
   const {
-    notes, allNotes, activeNote, activeNoteId, searchQuery, isSaving,
+    notes, allNotes, allTags, activeTag, activeNote, activeNoteId, searchQuery, isSaving,
     sortNewest, setSortNewest,
-    setActiveNoteId, setSearchQuery, createNote, deleteNote, togglePin, updateNote,
+    setActiveNoteId, setSearchQuery, setActiveTag, createNote, deleteNote, togglePin, updateNote,
+    addTag, removeTag,
     exportNotes, importNotes, clearAllNotes,
   } = useNotes();
 
@@ -151,8 +152,11 @@ export default function App() {
         activeNoteId={activeNoteId}
         searchQuery={searchQuery}
         noteCount={allNotes.length}
+        allTags={allTags}
+        activeTag={activeTag}
         onSelectNote={setActiveNoteId}
         onSearchChange={setSearchQuery}
+        onTagFilter={setActiveTag}
         onCreateNote={handleCreateNote}
         onDeleteNote={handleDeleteRequest}
         onPinNote={handlePinToggle}
@@ -190,7 +194,8 @@ export default function App() {
         {!hasNotes && !activeNote ? (
           <EmptyState onCreate={handleCreateNote} />
         ) : (
-          <NoteEditor note={activeNote} onUpdate={updateNote} isSaving={isSaving} />
+          <NoteEditor note={activeNote} onUpdate={updateNote} isSaving={isSaving}
+            onAddTag={addTag} onRemoveTag={removeTag} />
         )}
       </div>
 

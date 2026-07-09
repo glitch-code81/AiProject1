@@ -3,7 +3,8 @@ import NoteItem from './NoteItem';
 
 export default function Sidebar({
   notes, activeNoteId, searchQuery, noteCount,
-  onSelectNote, onSearchChange, onCreateNote, onDeleteNote, onPinNote,
+  allTags, activeTag,
+  onSelectNote, onSearchChange, onTagFilter, onCreateNote, onDeleteNote, onPinNote,
   onExport, onImport, isOpen, onToggle, sortNewest, onSortToggle,
 }) {
   return (
@@ -83,6 +84,30 @@ export default function Sidebar({
             Import
           </button>
         </div>
+
+        {/* Tag filter chips */}
+        {allTags.length > 0 && (
+          <div className="mx-4 mb-2 flex flex-wrap gap-1">
+            {activeTag && (
+              <button onClick={() => onTagFilter(null)}
+                className="px-2 py-0.5 text-[10px] font-medium rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 transition-colors cursor-pointer active:scale-95">
+                Clear filter
+              </button>
+            )}
+            {allTags.map((tag) => (
+              <button key={tag}
+                onClick={() => onTagFilter(tag === activeTag ? null : tag)}
+                className={`px-2 py-0.5 text-[10px] font-medium rounded-full transition-all cursor-pointer active:scale-95 ${
+                  tag === activeTag
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-300 dark:hover:bg-indigo-900/50'
+                }`}
+              >
+                #{tag}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Note list */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
