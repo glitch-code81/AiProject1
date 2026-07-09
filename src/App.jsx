@@ -56,10 +56,10 @@ function ConfirmDialog({ message, onConfirm, onCancel, confirmLabel = 'Delete', 
 
 export default function App() {
   const {
-    notes, allNotes, allTags, activeTag, activeNote, activeNoteId, searchQuery, isSaving,
+    notes, allNotes, allTags, activeTag, showArchived, activeNote, activeNoteId, searchQuery, isSaving,
     sortNewest, setSortNewest,
-    setActiveNoteId, setSearchQuery, setActiveTag, createNote, deleteNote, togglePin, updateNote,
-    addTag, removeTag,
+    setActiveNoteId, setSearchQuery, setActiveTag, setShowArchived, createNote, deleteNote, togglePin, updateNote,
+    addTag, removeTag, archiveNote, restoreNote, clearArchived,
     exportNotes, importNotes, clearAllNotes,
   } = useNotes();
 
@@ -154,11 +154,15 @@ export default function App() {
         noteCount={allNotes.length}
         allTags={allTags}
         activeTag={activeTag}
+        showArchived={showArchived}
         onSelectNote={setActiveNoteId}
         onSearchChange={setSearchQuery}
         onTagFilter={setActiveTag}
+        onToggleArchiveView={() => setShowArchived((prev) => !prev)}
         onCreateNote={handleCreateNote}
         onDeleteNote={handleDeleteRequest}
+        onArchiveNote={archiveNote}
+        onRestoreNote={restoreNote}
         onPinNote={handlePinToggle}
         onExport={handleExport}
         onImport={handleImportClick}

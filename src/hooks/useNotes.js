@@ -7,15 +7,23 @@ export function useNotes() {
   const [activeNoteId, setActiveNoteId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTag, setActiveTag] = useState(null);
+  const [showArchived, setShowArchived] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const saveTimer = useRef(null);
   const [sortNewest, setSortNewest] = useState(true);
 
   const allTags = [...new Set(notes.flatMap((n) => n.tags || []))].sort();
 
-  const filtered = notes
+  const filtered = [...notes]
+    .filter((n) => {
+      if (showArchived) return n.archived === true;
+      return !n.archived;
+    })
     .filter((n) => {
       if (activeTag && !(n.tags || []).includes(activeTag)) return false;
+      return true;
+    })
+    .filter((n) => {
       if (!searchQuery) return true;
       const q = searchQuery.toLowerCase();
       return (
@@ -37,6 +45,7 @@ export function useNotes() {
       content: '',
       tags: [],
       pinned: false,
+      archived: false,
       createdAt: now,
       updatedAt: now,
     };
@@ -85,6 +94,39 @@ export function useNotes() {
             ? { ...n, tags: (n.tags || []).filter((t) => t !== tag) }
             : n
         )
+      );
+    },
+    [setNotes]
+  );
+
+  const archiveNote = useCallback(
+    (id) => {
+      setNotes((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, archived: true } : n))
+      );
+      setActiveNoteId((prev) => (prev === id ? null : prev));
+    },
+    [setNotes]
+  );
+
+  const restoreNote = useCallback(
+    (id) => {
+      setNotes((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, archived: false } : n))
+      );
+      setActiveNoteId(id);
+    },
+    [setNotes]
+  );
+
+  const clearArchived = useCallback(() => {
+    setNotes((prev) => prev.filter((n) => !n.archived));
+  }, [setNotes]);
+
+  const setNoteColor = useCallback(
+    (id, color) => {
+      setNotes((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, color } : n))
       );
     },
     [setNotes]
@@ -150,6 +192,7 @@ export function useNotes() {
     allNotes: notes,
     allTags,
     activeTag,
+    showArchived,
     activeNote,
     activeNoteId,
     searchQuery,
@@ -157,6 +200,7 @@ export function useNotes() {
     sortNewest,
     setSortNewest,
     setActiveTag,
+    setShowArchived,
     setActiveNoteId,
     setSearchQuery,
     createNote,
@@ -164,6 +208,10 @@ export function useNotes() {
     togglePin,
     addTag,
     removeTag,
+    archiveNote,
+    restoreNote,
+    clearArchived,
+    setNoteColor,
     updateNote,
     exportNotes,
     importNotes,
