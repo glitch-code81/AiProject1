@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { formatDate } from '../utils/helpers';
+import MarkdownPreview from './MarkdownPreview';
 
 export default function NoteEditor({ note, onUpdate, isSaving }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [preview, setPreview] = useState(false);
   const titleRef = useRef(null);
   const titleTimer = useRef(null);
   const contentTimer = useRef(null);
@@ -12,6 +14,7 @@ export default function NoteEditor({ note, onUpdate, isSaving }) {
     if (note) {
       setTitle(note.title || '');
       setContent(note.content || '');
+      setPreview(false);
     }
   }, [note?.id]);
 
@@ -55,6 +58,29 @@ export default function NoteEditor({ note, onUpdate, isSaving }) {
           )}
         </div>
         <div className="flex items-center gap-3">
+          {/* Preview toggle */}
+          <button
+            onClick={() => setPreview((p) => !p)}
+            className={`p-1.5 rounded-lg transition-all cursor-pointer active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 ${
+              preview
+                ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-400'
+                : 'text-gray-400 hover:text-indigo-600 hover:bg-gray-100 dark:hover:bg-gray-800'
+            }`}
+            aria-label={preview ? 'Edit mode' : 'Preview mode'}
+            title={preview ? 'Switch to edit' : 'Preview markdown'}
+          >
+            {preview ? (
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            )}
+          </button>
           <div className="flex items-center gap-3 text-xs text-gray-400">
             <span className="tabular-nums font-medium">{wordCount} <span className="font-normal text-gray-300">words</span></span>
             <span className="hidden sm:inline tabular-nums font-medium">{charCount} <span className="font-normal text-gray-300">chars</span></span>
@@ -70,25 +96,29 @@ export default function NoteEditor({ note, onUpdate, isSaving }) {
 
       {/* Editor body */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto px-6 sm:px-10 py-8 sm:py-12">
-          <input
-            ref={titleRef}
-            type="text"
-            value={title}
-            onChange={handleTitleChange}
-            placeholder="Untitled"
-            className="w-full text-3xl sm:text-4xl font-bold text-gray-800 placeholder-gray-300 border-none outline-none bg-transparent mb-6 focus:ring-0 leading-tight tracking-tight"
-            aria-label="Note title"
-          />
-          <div className="h-px bg-gradient-to-r from-gray-100 via-gray-200 to-transparent mb-6" />
-          <textarea
-            value={content}
-            onChange={handleContentChange}
-            placeholder="Start writing..."
-            className="w-full min-h-[calc(100vh-300px)] text-base sm:text-lg text-gray-700 placeholder-gray-300 border-none outline-none bg-transparent resize-none focus:ring-0 leading-relaxed"
-            aria-label="Note content"
-          />
-        </div>
+        {preview ? (
+          <MarkdownPreview content={content} />
+        ) : (
+          <div className="max-w-3xl mx-auto px-6 sm:px-10 py-8 sm:py-12">
+            <input
+              ref={titleRef}
+              type="text"
+              value={title}
+              onChange={handleTitleChange}
+              placeholder="Untitled"
+              className="w-full text-3xl sm:text-4xl font-bold text-gray-800 placeholder-gray-300 border-none outline-none bg-transparent mb-6 focus:ring-0 leading-tight tracking-tight"
+              aria-label="Note title"
+            />
+            <div className="h-px bg-gradient-to-r from-gray-100 via-gray-200 to-transparent mb-6" />
+            <textarea
+              value={content}
+              onChange={handleContentChange}
+              placeholder="Start writing..."
+              className="w-full min-h-[calc(100vh-300px)] text-base sm:text-lg text-gray-700 placeholder-gray-300 border-none outline-none bg-transparent resize-none focus:ring-0 leading-relaxed"
+              aria-label="Note content"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
