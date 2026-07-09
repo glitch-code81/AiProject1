@@ -6,12 +6,16 @@ export function useNotes() {
   const [notes, setNotes] = useLocalStorage('notes-app-notes', []);
   const [activeNoteId, setActiveNoteId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTag, setActiveTag] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const saveTimer = useRef(null);
   const [sortNewest, setSortNewest] = useState(true);
 
+  const allTags = [...new Set(notes.flatMap((n) => n.tags || []))].sort();
+
   const filtered = notes
     .filter((n) => {
+      if (activeTag && !(n.tags || []).includes(activeTag)) return false;
       if (!searchQuery) return true;
       const q = searchQuery.toLowerCase();
       return (
@@ -31,6 +35,7 @@ export function useNotes() {
       id: generateId(),
       title: '',
       content: '',
+      tags: [],
       pinned: false,
       createdAt: now,
       updatedAt: now,
@@ -52,6 +57,34 @@ export function useNotes() {
     (id) => {
       setNotes((prev) =>
         prev.map((n) => (n.id === id ? { ...n, pinned: !n.pinned } : n))
+      );
+    },
+    [setNotes]
+  );
+
+  const addTag = useCallback(
+    (id, tag) => {
+      const trimmed = tag.trim().toLowerCase().replace(/\s+/g, '-');
+      if (!trimmed) return;
+      setNotes((prev) =>
+        prev.map((n) =>
+          n.id === id && !(n.tags || []).includes(trimmed)
+            ? { ...n, tags: [...(n.tags || []), trimmed] }
+            : n
+        )
+      );
+    },
+    [setNotes]
+  );
+
+  const removeTag = useCallback(
+    (id, tag) => {
+      setNotes((prev) =>
+        prev.map((n) =>
+          n.id === id
+            ? { ...n, tags: (n.tags || []).filter((t) => t !== tag) }
+            : n
+        )
       );
     },
     [setNotes]
@@ -115,17 +148,22 @@ export function useNotes() {
   return {
     notes: filtered,
     allNotes: notes,
+    allTags,
+    activeTag,
     activeNote,
     activeNoteId,
     searchQuery,
     isSaving,
     sortNewest,
     setSortNewest,
+    setActiveTag,
     setActiveNoteId,
     setSearchQuery,
     createNote,
     deleteNote,
     togglePin,
+    addTag,
+    removeTag,
     updateNote,
     exportNotes,
     importNotes,

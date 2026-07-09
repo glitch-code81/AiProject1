@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { formatDate } from '../utils/helpers';
+import TagInput from './TagInput';
 
-export default function NoteEditor({ note, onUpdate, isSaving }) {
+export default function NoteEditor({ note, onUpdate, isSaving, onAddTag, onRemoveTag }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const titleRef = useRef(null);
@@ -80,7 +81,9 @@ export default function NoteEditor({ note, onUpdate, isSaving }) {
             className="w-full text-3xl sm:text-4xl font-bold text-gray-800 placeholder-gray-300 border-none outline-none bg-transparent mb-6 focus:ring-0 leading-tight tracking-tight"
             aria-label="Note title"
           />
-          <div className="h-px bg-gradient-to-r from-gray-100 via-gray-200 to-transparent mb-6" />
+          <div className="h-px bg-gradient-to-r from-gray-100 via-gray-200 to-transparent mb-4" />
+          <TagInput tags={note.tags || []} onAdd={(t) => onAddTag(note.id, t)} onRemove={(t) => onRemoveTag(note.id, t)} />
+          <div className="h-px bg-gradient-to-r from-gray-100 via-gray-200 to-transparent mb-6 mt-4" />
           <textarea
             value={content}
             onChange={handleContentChange}
