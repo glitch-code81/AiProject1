@@ -21,6 +21,7 @@ export default function NoteItem({ note, isActive, onClick, onDelete, onPin, onA
           ? 'bg-indigo-50 dark:bg-indigo-900/30 shadow-sm'
           : 'hover:bg-gray-50 dark:hover:bg-gray-800/40 active:scale-[0.98]'
         }`}
+      style={note.color ? { borderLeft: `3px solid ${note.color}` } : {}}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter') onClick(note.id); }}

@@ -46,6 +46,7 @@ export function useNotes() {
       tags: [],
       pinned: false,
       archived: false,
+      color: null,
       createdAt: now,
       updatedAt: now,
     };
@@ -126,7 +127,9 @@ export function useNotes() {
   const setNoteColor = useCallback(
     (id, color) => {
       setNotes((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, color } : n))
+        prev.map((n) =>
+          n.id === id ? { ...n, color, updatedAt: new Date().toISOString() } : n
+        )
       );
     },
     [setNotes]
